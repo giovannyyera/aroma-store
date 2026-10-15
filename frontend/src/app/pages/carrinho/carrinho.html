@@ -1,0 +1,31 @@
+<h1>Carrinho</h1>
+
+<p *ngIf="carrinhoService.itens().length === 0">Seu carrinho está vazio.</p>
+
+<div *ngFor="let item of carrinhoService.itens()">
+  <h2>
+    {{ item.produto.nome }}
+  </h2>
+
+  <p>Preço unitário: R$ {{ item.produto.preco }}</p>
+
+  <p>Quantidade: {{ item.quantidade }}</p>
+
+  <button type="button" (click)="diminuir(item.produto.id)">-</button>
+
+  <button type="button" (click)="aumentar(item.produto.id)">+</button>
+
+  <button type="button" (click)="remover(item.produto.id)">Remover</button>
+
+  <hr />
+</div>
+
+<p *ngIf="carrinhoService.itens().length > 0">
+  Total: R$ {{ carrinhoService.valorTotal() | number: '1.2-2' }}
+</p>
+
+<p *ngIf="carrinhoService.itens().length > 0">
+  <a routerLink="/checkout"> Ir para checkout </a>
+</p>
+
+<a routerLink="/produtos"> Continuar comprando </a>

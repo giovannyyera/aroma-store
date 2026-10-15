@@ -1,0 +1,125 @@
+<h1>Checkout</h1>
+
+<p *ngIf="carrinhoService.itens().length === 0 && !pedidoCriado()">Seu carrinho está vazio.</p>
+
+<form *ngIf="carrinhoService.itens().length > 0 && !pedidoCriado()" (ngSubmit)="finalizarPedido()">
+  <h2>Dados pessoais</h2>
+
+  <label>
+    Nome
+    <input type="text" name="nome" [(ngModel)]="nome" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    E-mail
+    <input type="email" name="email" [(ngModel)]="email" />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Telefone
+    <input
+      type="text"
+      name="telefone"
+      [(ngModel)]="telefone"
+      (input)="formatarTelefone()"
+      maxlength="15"
+      placeholder="(18) 99999-9999"
+      required
+    />
+  </label>
+
+  <h2>Endereço</h2>
+
+  <label>
+    CEP
+    <input type="text" name="cep" [(ngModel)]="cep" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Endereço
+    <input type="text" name="endereco" [(ngModel)]="endereco" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Número
+    <input type="text" name="numero" [(ngModel)]="numero" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Complemento
+    <input type="text" name="complemento" [(ngModel)]="complemento" />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Bairro
+    <input type="text" name="bairro" [(ngModel)]="bairro" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Cidade
+    <input type="text" name="cidade" [(ngModel)]="cidade" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Estado
+    <input type="text" name="estado" [(ngModel)]="estado" maxlength="2" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Observação
+    <textarea name="observacao" [(ngModel)]="observacao"></textarea>
+  </label>
+
+  <h2>Resumo</h2>
+
+  <div *ngFor="let item of carrinhoService.itens()">
+    <p>
+      {{ item.produto.nome }}
+      -
+      {{ item.quantidade }}
+      x R$ {{ item.produto.preco }}
+    </p>
+  </div>
+
+  <p>Total: R$ {{ carrinhoService.valorTotal() | number: '1.2-2' }}</p>
+
+  <p *ngIf="erro()">
+    {{ erro() }}
+  </p>
+
+  <button type="submit" [disabled]="enviando()">
+    {{ enviando() ? 'Enviando...' : 'Finalizar pedido' }}
+  </button>
+</form>
+
+<div *ngIf="pedidoCriado()">
+  <h2>Pedido realizado com sucesso</h2>
+
+  <p>Número do pedido: #{{ pedidoCriado() }}</p>
+
+  <p>Seu pedido foi registrado como pendente.</p>
+
+  <button type="button" (click)="abrirWhatsApp()">Continuar pelo WhatsApp</button>
+</div>
+
+<br />
+
+<a routerLink="/produtos"> Voltar aos produtos </a>

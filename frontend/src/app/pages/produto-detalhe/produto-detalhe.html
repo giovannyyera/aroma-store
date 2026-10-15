@@ -1,0 +1,31 @@
+<a routerLink="/produtos"> Voltar para produtos </a>
+
+<p *ngIf="carregando()">Carregando...</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<div *ngIf="produto() as produto">
+  <h1>
+    {{ produto.nome }}
+  </h1>
+
+  <p>Categoria: {{ produto.categoria_nome }}</p>
+
+  <p>
+    {{ produto.descricao }}
+  </p>
+
+  <p>Preço: R$ {{ produto.preco }}</p>
+
+  <p>Estoque: {{ produto.estoque }}</p>
+
+  <button type="button" (click)="adicionarAoCarrinho()" [disabled]="produto.estoque <= 0">
+    Adicionar ao carrinho
+  </button>
+
+  <br /><br />
+
+  <a routerLink="/carrinho"> Ver carrinho </a>
+</div>

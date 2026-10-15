@@ -1,0 +1,27 @@
+<h1>Produtos</h1>
+
+<p *ngIf="carregando()">Carregando produtos...</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<div *ngFor="let produto of produtos()">
+  <h2>
+    {{ produto.nome }}
+  </h2>
+
+  <p>Categoria: {{ produto.categoria_nome }}</p>
+
+  <p>
+    {{ produto.descricao }}
+  </p>
+
+  <p>Preço: R$ {{ produto.preco }}</p>
+
+  <p>Estoque: {{ produto.estoque }}</p>
+
+  <a [routerLink]="['/produtos', produto.id]"> Ver produto </a>
+
+  <hr />
+</div>
