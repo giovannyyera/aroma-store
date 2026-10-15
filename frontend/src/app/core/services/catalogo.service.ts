@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Categoria, Produto } from '../../models/catalogo.model';
+import { Categoria, Produto, PaginatedResponse } from '../../models/catalogo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +19,13 @@ export class CatalogoService {
     );
   }
 
-  listarProdutos(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(
-      `${this.apiUrl}/produtos/`
+  listarProdutos(
+    page: number = 1,
+    pageSize: number = 20
+  ): Observable<PaginatedResponse<Produto>> {
+
+    return this.http.get<PaginatedResponse<Produto>>(
+      `${this.apiUrl}/produtos/?page=${page}&page_size=${pageSize}`
     );
   }
 

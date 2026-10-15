@@ -1,21 +1,17 @@
-<h1>Produtos</h1>
-
-<p *ngIf="carregando()">Carregando produtos...</p>
-
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
-
 <div *ngFor="let produto of produtos()">
   <h2>
     {{ produto.nome }}
   </h2>
 
-  <p>Categoria: {{ produto.categoria_nome }}</p>
+  <img
+    *ngIf="produto.imagem_principal"
+    [src]="produto.imagem_principal"
+    [alt]="produto.nome"
+    loading="lazy"
+    width="300"
+  />
 
-  <p>
-    {{ produto.descricao }}
-  </p>
+  <p>Categoria: {{ produto.categoria_nome }}</p>
 
   <p>Preço: R$ {{ produto.preco }}</p>
 
@@ -24,4 +20,14 @@
   <a [routerLink]="['/produtos', produto.id]"> Ver produto </a>
 
   <hr />
+</div>
+
+<p>Total de produtos: {{ totalProdutos() }}</p>
+
+<div *ngIf="totalProdutos() > 0">
+  <button type="button" (click)="paginaAnterior()" [disabled]="!temAnterior()">Anterior</button>
+
+  <span> Página {{ paginaAtual() }} </span>
+
+  <button type="button" (click)="proximaPagina()" [disabled]="!temProxima()">Próxima</button>
 </div>

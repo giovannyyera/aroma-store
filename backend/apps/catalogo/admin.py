@@ -1,13 +1,45 @@
 from django.contrib import admin
-from .models import Categoria, Produto
+
+from .models import Categoria, Produto, ProdutoImagem
 
 
-@admin.register(Categoria) #registra o modelo no painel admin
+class ProdutoImagemInline(admin.TabularInline):
+    model = ProdutoImagem
+    extra = 1
+
+    fields = (
+        "imagem",
+        "thumbnail",
+        "principal",
+        "ordem",
+        "alt_text",
+    )
+
+    readonly_fields = (
+        "thumbnail",
+    )
+
+
+@admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ("id", "nome", "ativo") #define as colunas exibidas no painel
-    list_filter = ("ativo",) #adiciona filtros laterais
-    search_fields = ("nome", "descricao") #permite pesquisar registros
-    ordering = ("nome",) #ordenação padrão
+    list_display = (
+        "id",
+        "nome",
+        "ativo",
+    )
+
+    list_filter = (
+        "ativo",
+    )
+
+    search_fields = (
+        "nome",
+        "descricao",
+    )
+
+    ordering = (
+        "nome",
+    )
 
 
 @admin.register(Produto)
@@ -22,7 +54,48 @@ class ProdutoAdmin(admin.ModelAdmin):
         "criado_em",
     )
 
-    list_filter = ("categoria", "ativo")
-    search_fields = ("nome", "descricao")
-    ordering = ("nome",)
-    list_per_page = 20 #limita a quantidade de registros por pg
+    list_filter = (
+        "categoria",
+        "ativo",
+    )
+
+    search_fields = (
+        "nome",
+        "descricao",
+    )
+
+    ordering = (
+        "nome",
+    )
+
+    list_per_page = 20
+
+    inlines = [
+        ProdutoImagemInline,
+    ]
+
+
+@admin.register(ProdutoImagem)
+class ProdutoImagemAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "produto",
+        "principal",
+        "ordem",
+        "criado_em",
+    )
+
+    list_filter = (
+        "principal",
+        "criado_em",
+    )
+
+    search_fields = (
+        "produto__nome",
+        "alt_text",
+    )
+
+    ordering = (
+        "produto",
+        "ordem",
+    )

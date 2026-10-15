@@ -10,6 +10,15 @@
   <h1>
     {{ produto.nome }}
   </h1>
+  <div *ngIf="produto.imagens?.length">
+    <img
+      *ngFor="let imagem of produto.imagens"
+      [src]="imagem.imagem_url"
+      [alt]="imagem.alt_text || produto.nome"
+      loading="lazy"
+      width="300"
+    />
+  </div>
 
   <p>Categoria: {{ produto.categoria_nome }}</p>
 

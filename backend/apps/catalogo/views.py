@@ -1,48 +1,63 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from .pagination import ProdutoPagination
 
 from .models import Categoria, Produto
-from .serializers import CategoriaSerializer, ProdutoSerializer
+from .serializers import (
+    CategoriaSerializer,
+    ProdutoListSerializer,
+    ProdutoDetailSerializer,
+)
 
 
-class CategoriaListView(generics.ListAPIView): #cria uma API de listagem usando GET
+class CategoriaListView(generics.ListAPIView):  # cria uma API de listagem usando GET
     serializer_class = CategoriaSerializer
-    permission_classes = [AllowAny] #permite que visitantes consultem o catálogo sem login
+    permission_classes = [
+        AllowAny
+    ]  # permite que visitantes consultem o catálogo sem login
 
     def get_queryset(self):
         return Categoria.objects.filter(ativo=True)
 
 
 class ProdutoListView(generics.ListAPIView):
-    serializer_class = ProdutoSerializer
+    serializer_class = ProdutoListSerializer
     permission_classes = [AllowAny]
+    pagination_class = ProdutoPagination
 
-    def get_queryset(self): #monta a consulta de acordo com os filtros enviados na URL
-        queryset = Produto.objects.filter(
-            ativo=True,
-            categoria__ativo=True
-        ).select_related("categoria") #otimiza a consulta ao relacionamento com categoria
+    def get_queryset(self):
+        queryset = (
+            Produto.objects.filter(ativo=True, categoria__ativo=True)
+            .select_related("categoria")
+            .prefetch_related("imagens")
+        )
 
-        busca = self.request.query_params.get("busca", "").strip() #recupera os parâmetros busca e categoria
+        busca = self.request.query_params.get("busca", "").strip()
+
         categoria = self.request.query_params.get("categoria", "").strip()
 
         if busca:
-            queryset = queryset.filter(nome__icontains=busca) #pesquisa nomes sem diferenciar letras maiúsculas e minúsculas
+            queryset = queryset.filter(nome__icontains=busca)
 
         if categoria:
             if not categoria.isdecimal():
-                return queryset.none() #retorna uma lista vazia quando o identificador da categoria não é numérico
+                return queryset.none()
 
-            queryset = queryset.filter(categoria_id=int(categoria)) #filtra os produtos pela chave estrangeira da categoria
+            queryset = queryset.filter(categoria_id=int(categoria))
 
         return queryset
 
 
-class ProdutoDetailView(generics.RetrieveAPIView): #retorna um único produto pelo ID
-    serializer_class = ProdutoSerializer
+class ProdutoDetailView(generics.RetrieveAPIView):
+    serializer_class = ProdutoDetailSerializer
     permission_classes = [AllowAny]
 
-    queryset = Produto.objects.filter(
-        ativo=True,
-        categoria__ativo=True
-    ).select_related("categoria")
+    queryset = (
+        Produto.objects
+        .filter(
+            ativo=True,
+            categoria__ativo=True
+        )
+        .select_related("categoria")
+        .prefetch_related("imagens")
+    )
