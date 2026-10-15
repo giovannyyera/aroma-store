@@ -78,12 +78,25 @@ class CheckoutSerializer(serializers.Serializer):
             if caractere.isdigit()
         )
 
-        if len(numeros) < 10 or len(numeros) > 11:
+        if len(numeros) not in (10, 11):
             raise serializers.ValidationError(
                 "Informe um telefone válido com DDD."
             )
 
-        return value.strip()
+        ddd = numeros[:2]
+
+        if len(numeros) == 11:
+            return (
+                f"({ddd}) "
+                f"{numeros[2:7]}-"
+                f"{numeros[7:]}"
+            )
+
+        return (
+            f"({ddd}) "
+            f"{numeros[2:6]}-"
+            f"{numeros[6:]}"
+        )
 
     def validate_itens(self, itens):
         if not itens:
