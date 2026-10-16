@@ -1,0 +1,155 @@
+<h1>
+  {{ produtoId ? 'Editar Produto' : 'Novo Produto' }}
+</h1>
+
+<p *ngIf="carregando()">Carregando...</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<form *ngIf="!carregando()" (ngSubmit)="salvar()">
+  <label>
+    Nome
+    <input type="text" name="nome" [(ngModel)]="nome" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Descrição
+    <br />
+    <textarea name="descricao" [(ngModel)]="descricao"></textarea>
+  </label>
+
+  <br /><br />
+
+  <label>
+    Preço
+    <input type="number" name="preco" [(ngModel)]="preco" min="0.01" step="0.01" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Estoque
+    <input type="number" name="estoque" [(ngModel)]="estoque" min="0" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Categoria
+
+    <select name="categoria" [(ngModel)]="categoria" required>
+      <option [ngValue]="0" disabled>Selecione</option>
+
+      <option *ngFor="let categoriaItem of categorias()" [ngValue]="categoriaItem.id">
+        {{ categoriaItem.nome }}
+      </option>
+    </select>
+  </label>
+
+  <br /><br />
+
+  <label>
+    <input type="checkbox" name="ativo" [(ngModel)]="ativo" />
+
+    Produto ativo
+  </label>
+
+  <br /><br />
+
+  <button type="submit" [disabled]="salvando()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</form>
+
+<br />
+
+<hr />
+
+<section *ngIf="produtoId">
+  <h2>Imagens do Produto</h2>
+
+  <h3>Adicionar nova imagem</h3>
+
+  <label>
+    Arquivo
+
+    <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="selecionarArquivo($event)" />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Alt text
+
+    <input type="text" [(ngModel)]="imagemAltText" />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Ordem
+
+    <input type="number" [(ngModel)]="imagemOrdem" min="0" />
+  </label>
+
+  <br /><br />
+
+  <label>
+    <input type="checkbox" [(ngModel)]="imagemPrincipal" />
+
+    Imagem principal
+  </label>
+
+  <br /><br />
+
+  <button type="button" (click)="enviarImagem()" [disabled]="enviandoImagem()">
+    {{ enviandoImagem() ? 'Enviando...' : 'Enviar imagem' }}
+  </button>
+
+  <hr />
+
+  <h3>Imagens cadastradas</h3>
+
+  <p *ngIf="imagens().length === 0">Nenhuma imagem cadastrada.</p>
+
+  <div *ngFor="let imagem of imagens()">
+    <img
+      [src]="imagem.thumbnail_url || imagem.imagem_url"
+      [alt]="imagem.alt_text || nome"
+      width="150"
+      loading="lazy"
+    />
+
+    <p>
+      Principal:
+      {{ imagem.principal ? 'Sim' : 'Não' }}
+    </p>
+
+    <label>
+      Ordem
+
+      <input
+        type="number"
+        [ngModel]="imagem.ordem"
+        (ngModelChange)="alterarOrdem(imagem, $event)"
+        min="0"
+      />
+    </label>
+
+    <br /><br />
+
+    <button *ngIf="!imagem.principal" type="button" (click)="tornarPrincipal(imagem)">
+      Tornar principal
+    </button>
+
+    <button type="button" (click)="excluirImagem(imagem)">Excluir</button>
+
+    <hr />
+  </div>
+</section>
+
+<a routerLink="/admin/produtos"> Voltar </a>

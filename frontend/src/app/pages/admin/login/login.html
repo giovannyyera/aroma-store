@@ -1,0 +1,26 @@
+<p>login works!</p>
+<h1>Área Administrativa</h1>
+
+<form (ngSubmit)="entrar()">
+  <label>
+    Usuário
+    <input type="text" name="username" [(ngModel)]="username" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Senha
+    <input type="password" name="password" [(ngModel)]="password" required />
+  </label>
+
+  <br /><br />
+
+  <p *ngIf="erro()">
+    {{ erro() }}
+  </p>
+
+  <button type="submit" [disabled]="enviando()">
+    {{ enviando() ? 'Entrando...' : 'Entrar' }}
+  </button>
+</form>

@@ -1,0 +1,45 @@
+<h1>
+  {{ categoriaId ? 'Editar Categoria' : 'Nova Categoria' }}
+</h1>
+
+<p *ngIf="carregando()">Carregando...</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<form *ngIf="!carregando()" (ngSubmit)="salvar()">
+  <label>
+    Nome
+
+    <input type="text" name="nome" [(ngModel)]="nome" required />
+  </label>
+
+  <br /><br />
+
+  <label>
+    Descrição
+
+    <br />
+
+    <textarea name="descricao" [(ngModel)]="descricao"></textarea>
+  </label>
+
+  <br /><br />
+
+  <label>
+    <input type="checkbox" name="ativo" [(ngModel)]="ativo" />
+
+    Categoria ativa
+  </label>
+
+  <br /><br />
+
+  <button type="submit" [disabled]="salvando()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</form>
+
+<br />
+
+<a routerLink="/admin/categorias"> Voltar </a>

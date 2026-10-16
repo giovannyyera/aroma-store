@@ -228,3 +228,45 @@ class PedidoSerializer(serializers.ModelSerializer):
     def get_whatsapp_url(self, obj):
         _, url = gerar_whatsapp_pedido(obj)
         return url
+
+class PedidoAdminSerializer(serializers.ModelSerializer):
+    cliente_nome = serializers.CharField(
+        source="cliente.nome",
+        read_only=True
+    )
+
+    cliente_telefone = serializers.CharField(
+        source="cliente.telefone",
+        read_only=True
+    )
+
+    itens = ItemPedidoSerializer(
+        many=True,
+        read_only=True
+    )
+
+    total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Pedido
+        fields = [
+            "id",
+            "cliente",
+            "cliente_nome",
+            "cliente_telefone",
+            "status",
+            "observacao",
+            "criado_em",
+            "atualizado_em",
+            "itens",
+            "total",
+        ]
+
+    def get_total(self, obj):
+        return sum(
+            (
+                item.preco_unitario * item.quantidade
+                for item in obj.itens.all()
+            ),
+            Decimal("0.00")
+        )

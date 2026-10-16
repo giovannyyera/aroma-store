@@ -1,0 +1,62 @@
+<h1>Categorias</h1>
+
+<p>
+  <a routerLink="/admin/categorias/nova"> Cadastrar nova categoria </a>
+</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<p *ngIf="carregando()">Carregando...</p>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Produtos</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let categoria of categorias()">
+      <td>
+        {{ categoria.id }}
+      </td>
+
+      <td>
+        {{ categoria.nome }}
+      </td>
+
+      <td>
+        {{ categoria.descricao }}
+      </td>
+
+      <td>
+        {{ categoria.quantidade_produtos }}
+      </td>
+
+      <td>
+        {{ categoria.ativo ? 'Ativa' : 'Inativa' }}
+      </td>
+
+      <td>
+        <a [routerLink]="['/admin/categorias', categoria.id, 'editar']"> Editar </a>
+
+        &nbsp;
+
+        <button *ngIf="categoria.ativo" type="button" (click)="desativar(categoria.id)">
+          Desativar
+        </button>
+
+        <button *ngIf="!categoria.ativo" type="button" (click)="ativar(categoria.id)">
+          Ativar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,87 @@
+<h1>Produtos</h1>
+
+<p>
+  <a routerLink="/admin/produtos/novo"> Cadastrar novo produto </a>
+</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<label>
+  Buscar:
+  <input type="text" [(ngModel)]="busca" />
+</label>
+
+<button type="button" (click)="carregar()">Buscar</button>
+
+<p>
+  <button (click)="carregar()">Todos</button>
+
+  <button (click)="carregar('true')">Ativos</button>
+
+  <button (click)="carregar('false')">Inativos</button>
+</p>
+
+<p *ngIf="carregando()">Carregando...</p>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Imagem</th>
+      <th>ID</th>
+      <th>Produto</th>
+      <th>Categoria</th>
+      <th>Preço</th>
+      <th>Estoque</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let produto of produtos()">
+      <td>
+        <img
+          *ngIf="produto.imagem_principal"
+          [src]="produto.imagem_principal"
+          [alt]="produto.nome"
+          loading="lazy"
+          width="80"
+        />
+      </td>
+
+      <td>
+        {{ produto.id }}
+      </td>
+
+      <td>
+        {{ produto.nome }}
+      </td>
+
+      <td>
+        {{ produto.categoria_nome }}
+      </td>
+
+      <td>R$ {{ produto.preco }}</td>
+
+      <td>
+        {{ produto.estoque }}
+      </td>
+
+      <td>
+        {{ produto.ativo ? 'Ativo' : 'Inativo' }}
+      </td>
+
+      <a [routerLink]="['/admin/produtos', produto.id, 'editar']"> Editar </a>
+
+      &nbsp;
+
+      <td>
+        <button *ngIf="produto.ativo" (click)="desativar(produto.id)">Retirar do catálogo</button>
+
+        <button *ngIf="!produto.ativo" (click)="ativar(produto.id)">Reativar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

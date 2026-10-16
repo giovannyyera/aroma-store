@@ -38,6 +38,11 @@ urlpatterns = [
         "api/relatorios/",
         include("apps.relatorios.urls")
     ),
+
+    path(
+        "api/auth/",
+        include("apps.autenticacao.urls")
+    ),
 ]
 
 if settings.DEBUG:

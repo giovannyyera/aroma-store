@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Bibliotecas
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
 
     # Aplicações
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     "apps.pedidos",
     "apps.estoque",
     "apps.relatorios",
+    "apps.autenticacao",
 ]
 
 MIDDLEWARE = [
@@ -156,3 +158,10 @@ CORS_ALLOW_CREDENTIALS = True
 # onde as imagens físicas ficarão armazenadas
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
