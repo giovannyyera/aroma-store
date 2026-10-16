@@ -4,12 +4,13 @@ import { Produtos } from './pages/produtos/produtos';
 import { ProdutoDetalhe } from './pages/produto-detalhe/produto-detalhe';
 import { Carrinho } from './pages/carrinho/carrinho';
 import { Checkout } from './pages/checkout/checkout';
+import { Home } from './pages/home/home';
+import { Relatorios } from './pages/relatorios/relatorios';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'produtos',
-    pathMatch: 'full'
+    component: Home
   },
   {
     path: 'produtos',
@@ -26,5 +27,13 @@ export const routes: Routes = [
   {
     path: 'checkout',
     component: Checkout
-  }
+  },
+  {
+    path: 'relatorios',
+    component: Relatorios
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  },
 ];

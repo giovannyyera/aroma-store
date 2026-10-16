@@ -1,0 +1,131 @@
+<h1>Relatórios</h1>
+
+<p *ngIf="carregando()">Carregando relatórios...</p>
+
+<p *ngIf="erro()">
+  {{ erro() }}
+</p>
+
+<div *ngIf="resumo() as resumo">
+  <h2>Resumo Geral</h2>
+
+  <p>
+    Total de pedidos:
+    {{ resumo.total_pedidos }}
+  </p>
+
+  <p>
+    Pendentes:
+    {{ resumo.pedidos_pendentes }}
+  </p>
+
+  <p>
+    Confirmados:
+    {{ resumo.pedidos_confirmados }}
+  </p>
+
+  <p>
+    Concluídos:
+    {{ resumo.pedidos_concluidos }}
+  </p>
+
+  <p>
+    Cancelados:
+    {{ resumo.pedidos_cancelados }}
+  </p>
+
+  <p>
+    <strong> Faturamento realizado: R$ {{ resumo.faturamento_realizado }} </strong>
+  </p>
+</div>
+
+<hr />
+
+<h2>Produtos Vendidos</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Produto</th>
+      <th>Categoria</th>
+      <th>Quantidade</th>
+      <th>Faturamento</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let produto of produtos()">
+      <td>
+        {{ produto.produto_nome }}
+      </td>
+
+      <td>
+        {{ produto.categoria_nome }}
+      </td>
+
+      <td>
+        {{ produto.quantidade_vendida }}
+      </td>
+
+      <td>R$ {{ produto.faturamento }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2>Vendas por Categoria</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Categoria</th>
+      <th>Quantidade</th>
+      <th>Faturamento</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let categoria of categorias()">
+      <td>
+        {{ categoria.categoria_nome }}
+      </td>
+
+      <td>
+        {{ categoria.quantidade_vendida }}
+      </td>
+
+      <td>R$ {{ categoria.faturamento }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2>Vendas Mensais</h2>
+
+<table border="1" *ngIf="pivot() as pivot">
+  <thead>
+    <tr>
+      <th>Categoria</th>
+
+      <th *ngFor="let mes of pivot.colunas">
+        {{ mes }}
+      </th>
+
+      <th>Total</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let linha of pivot.linhas">
+      <td>
+        {{ linha.categoria }}
+      </td>
+
+      <td *ngFor="let mes of pivot.colunas">R$ {{ linha.meses[mes] || 0 }}</td>
+
+      <td>R$ {{ linha.total }}</td>
+    </tr>
+  </tbody>
+</table>

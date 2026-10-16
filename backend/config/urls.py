@@ -33,6 +33,11 @@ urlpatterns = [
         "api/pedidos/",
         include("apps.pedidos.urls")
     ),
+
+    path(
+        "api/relatorios/",
+        include("apps.relatorios.urls")
+    ),
 ]
 
 if settings.DEBUG:
