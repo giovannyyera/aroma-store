@@ -1,21 +1,117 @@
-<h1>Painel Administrativo</h1>
 
-<p>Login realizado com sucesso.</p>
+<main class="admin-dashboard">
 
-<button type="button" (click)="sair()">Sair</button>
+  <!-- Cabeçalho administrativo -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<p>
-  <a href="/admin/pedidos"> Gerenciar pedidos </a>
-</p>
+      <div class="admin-brand">
+        <div class="brand-icon">
+          <i class="bi bi-flower1"></i>
+        </div>
 
-<p>
-  <a href="/admin/produtos"> Gerenciar produtos </a>
-</p>
+        <span class="brand-name">Aroma Store</span>
 
-<p>
-  <a href="/admin/categorias"> Gerenciar categorias </a>
-</p>
+        <span class="brand-divider"></span>
 
-<p>
-  <a href="/admin/relatorios"> Ver relatórios </a>
-</p>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="logout-button"
+        (click)="sair()"
+      >
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Sair</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <div class="dashboard-content">
+
+    <!-- Mensagem de boas-vindas -->
+    <div class="welcome-message" role="status">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>Seja bem-vindo Admin!</span>
+    </div>
+
+    <!-- Acessos administrativos -->
+    <nav
+      class="dashboard-grid"
+      aria-label="Módulos administrativos"
+    >
+
+      <!-- Pedidos -->
+      <a
+        routerLink="/admin/pedidos"
+        class="dashboard-card"
+      >
+        <div class="card-icon">
+          <i class="bi bi-cart3"></i>
+        </div>
+
+        <span class="card-title">
+          Gerenciar pedidos
+        </span>
+
+        <i class="bi bi-chevron-right card-arrow"></i>
+      </a>
+
+      <!-- Produtos -->
+      <a
+        routerLink="/admin/produtos"
+        class="dashboard-card"
+      >
+        <div class="card-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+
+        <span class="card-title">
+          Gerenciar produtos
+        </span>
+
+        <i class="bi bi-chevron-right card-arrow"></i>
+      </a>
+
+      <!-- Categorias -->
+      <a
+        routerLink="/admin/categorias"
+        class="dashboard-card"
+      >
+        <div class="card-icon">
+          <i class="bi bi-tags"></i>
+        </div>
+
+        <span class="card-title"> 
+          Gerenciar categorias
+        </span>
+
+        <i class="bi bi-chevron-right card-arrow"></i>
+      </a>
+
+      <!-- Relatórios -->
+      <a
+        routerLink="/admin/relatorios"
+        class="dashboard-card"
+      >
+        <div class="card-icon">
+          <i class="bi bi-bar-chart-line"></i>
+        </div>
+
+        <span class="card-title">
+          Ver relatórios
+        </span>
+
+        <i class="bi bi-chevron-right card-arrow"></i>
+      </a>
+
+    </nav>
+
+  </div>
+
+</main>

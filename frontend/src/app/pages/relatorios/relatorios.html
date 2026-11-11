@@ -1,131 +1,834 @@
-<h1>Relatórios</h1>
 
-<p *ngIf="carregando()">Carregando relatórios...</p>
+<main class="admin-reports">
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+  <!-- HEADER ADMINISTRATIVO -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<div *ngIf="resumo() as resumo">
-  <h2>Resumo Geral</h2>
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
+        <span class="brand-name">Aroma Store</span>
+        <span class="brand-divider"></span>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-  <p>
-    Total de pedidos:
-    {{ resumo.total_pedidos }}
-  </p>
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-  <p>
-    Pendentes:
-    {{ resumo.pedidos_pendentes }}
-  </p>
+    </div>
+  </header>
 
-  <p>
-    Confirmados:
-    {{ resumo.pedidos_confirmados }}
-  </p>
+  <div class="reports-container">
 
-  <p>
-    Concluídos:
-    {{ resumo.pedidos_concluidos }}
-  </p>
+    <!-- TÍTULO -->
+    <section class="reports-heading">
 
-  <p>
-    Cancelados:
-    {{ resumo.pedidos_cancelados }}
-  </p>
+      <div class="heading-left">
+        <div class="heading-icon">
+          <i class="bi bi-bar-chart-line"></i>
+        </div>
 
-  <p>
-    <strong> Faturamento realizado: R$ {{ resumo.faturamento_realizado }} </strong>
-  </p>
+        <div class="heading-text">
+          <h1>Relatórios</h1>
+          <p>
+            Acompanhe as vendas e o desempenho da loja.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ERRO -->
+    <div class="reports-error" *ngIf="erro()" role="alert">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
+    </div>
+
+    <!-- CARREGAMENTO -->
+    <div class="reports-loading" *ngIf="carregando()">
+      <div class="loading-spinner"></div>
+      <p>Carregando relatórios...</p>
+    </div>
+
+    <!-- RELATÓRIOS -->
+    <div *ngIf="!carregando()">
+
+      <!-- RESUMO GERAL -->
+      <section class="summary-section" *ngIf="resumo() as resumo">
+
+        <div class="section-heading">
+          <div>
+            <h2>Resumo geral</h2>
+            <p>Visão geral dos pedidos e resultados.</p>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+
+          <!-- TOTAL DE PEDIDOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon total-icon">
+                <i class="bi bi-bag"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Total de pedidos</p>
+
+            <strong class="summary-value">
+              {{ resumo.total_pedidos }}
+            </strong>
+
+            <span class="summary-description">
+              Pedidos registrados
+            </span>
+          </article>
+
+          <!-- PENDENTES -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon pending-icon">
+                <i class="bi bi-clock-history"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Pendentes</p>
+
+            <strong class="summary-value">
+              {{ resumo.pedidos_pendentes }}
+            </strong>
+
+            <span class="summary-description">
+              Aguardando confirmação
+            </span>
+          </article>
+
+          <!-- CONFIRMADOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon confirmed-icon">
+                <i class="bi bi-check2-circle"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Confirmados</p>
+
+            <strong class="summary-value">
+              {{ resumo.pedidos_confirmados }}
+            </strong>
+
+            <span class="summary-description">
+              Pedidos confirmados
+            </span>
+          </article>
+
+          <!-- CONCLUÍDOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon completed-icon">
+                <i class="bi bi-check2-all"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Concluídos</p>
+
+            <strong class="summary-value">
+              {{ resumo.pedidos_concluidos }}
+            </strong>
+
+            <span class="summary-description">
+              Pedidos finalizados
+            </span>
+          </article>
+
+          <!-- CANCELADOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon canceled-icon">
+                <i class="bi bi-x-circle"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Cancelados</p>
+
+            <strong class="summary-value">
+              {{ resumo.pedidos_cancelados }}
+            </strong>
+
+            <span class="summary-description">
+              Pedidos cancelados
+            </span>
+          </article>
+
+          <!-- FATURAMENTO -->
+          <article class="summary-card revenue-card">
+            <div class="summary-card-top">
+              <span class="summary-icon revenue-icon">
+                <i class="bi bi-currency-dollar"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Faturamento realizado</p>
+
+            <strong class="summary-value revenue-value">
+              {{ resumo.faturamento_realizado | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </strong>
+
+            <span class="summary-description">
+              Total realizado em vendas
+            </span>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- PRODUTOS VENDIDOS -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-box-seam"></i>
+            </span>
+
+            <div>
+              <h2>Produtos vendidos</h2>
+              <p>Desempenho individual dos produtos.</p>
+            </div>
+          </div>
+
+          <span class="panel-count">
+            {{ produtos().length }}
+            {{ produtos().length === 1 ? 'produto' : 'produtos' }}
+          </span>
+        </div>
+
+        <div class="table-wrapper" *ngIf="produtos().length > 0">
+          <table class="report-table">
+
+            <thead>
+              <tr>
+                <th scope="col">Produto</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Quantidade vendida</th>
+                <th scope="col">Faturamento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let produto of produtos()">
+
+                <td class="item-name">
+                  {{ produto.produto_nome }}
+                </td>
+
+                <td class="item-category">
+                  {{ produto.categoria_nome }}
+                </td>
+
+                <td>
+                  <span class="quantity-badge">
+                    {{ produto.quantidade_vendida }} un.
+                  </span>
+                </td>
+
+                <td class="money-value">
+                  {{ produto.faturamento | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="report-empty" *ngIf="produtos().length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Nenhum produto vendido até o momento.</p>
+        </div>
+
+        <div class="panel-footer">
+          Exibindo {{ produtos().length }}
+          {{ produtos().length === 1 ? 'registro' : 'registros' }}
+        </div>
+
+      </section>
+
+      <!-- VENDAS POR CATEGORIA -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-tags"></i>
+            </span>
+
+            <div>
+              <h2>Vendas por categoria</h2>
+              <p>Resultados agrupados pelas categorias da loja.</p>
+            </div>
+          </div>
+
+          <span class="panel-count">
+            {{ categorias().length }}
+            {{ categorias().length === 1 ? 'categoria' : 'categorias' }}
+          </span>
+        </div>
+
+        <div class="table-wrapper" *ngIf="categorias().length > 0">
+          <table class="report-table">
+
+            <thead>
+              <tr>
+                <th scope="col">Categoria</th>
+                <th scope="col">Quantidade vendida</th>
+                <th scope="col">Faturamento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let categoria of categorias()">
+
+                <td class="item-name">
+                  {{ categoria.categoria_nome }}
+                </td>
+
+                <td>
+                  <span class="quantity-badge">
+                    {{ categoria.quantidade_vendida }} un.
+                  </span>
+                </td>
+
+                <td class="money-value">
+                  {{ categoria.faturamento | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="report-empty" *ngIf="categorias().length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Não há vendas por categoria para exibir.</p>
+        </div>
+
+        <div class="panel-footer">
+          Exibindo {{ categorias().length }}
+          {{ categorias().length === 1 ? 'registro' : 'registros' }}
+        </div>
+
+      </section>
+
+      <!-- VENDAS MENSAIS -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-calendar3"></i>
+            </span>
+
+            <div>
+              <h2>Vendas mensais</h2>
+              <p>Faturamento por categoria e mês.</p>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="pivot() as pivot">
+
+          <div class="table-wrapper" *ngIf="pivot.linhas.length > 0">
+
+            <table class="report-table monthly-table">
+
+              <thead>
+                <tr>
+                  <th scope="col">Categoria</th>
+
+                  <th
+                    scope="col"
+                    *ngFor="let mes of pivot.colunas"
+                  >
+                    {{ mes }}
+                  </th>
+
+                  <th scope="col" class="total-column">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let linha of pivot.linhas">
+
+                  <td class="item-name">
+                    {{ linha.categoria }}
+                  </td>
+
+                  <td *ngFor="let mes of pivot.colunas">
+                    {{ (linha.meses[mes] || 0) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+
+                  <td class="money-value total-column">
+                    {{ linha.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+          <div class="report-empty" *ngIf="pivot.linhas.length === 0">
+            <i class="bi bi-calendar-x"></i>
+            <p>Não há dados de vendas mensais disponíveis.</p>
+          </div>
+
+        </ng-container>
+
+        <div class="report-empty" *ngIf="!pivot()">
+          <i class="bi bi-calendar-x"></i>
+          <p>Não há dados de vendas mensais disponíveis.</p>
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<main class="admin-reports">
+
+  <!-- HEADER ADMINISTRATIVO -->
+  <header class="admin-header">
+    <div class="admin-header-content">
+
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
+        <span class="brand-name">Aroma Store</span>
+        <span class="brand-divider"></span>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
+
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
+
+    </div>
+  </header>
+
+  <div class="reports-container">
+
+    <!-- TÍTULO -->
+    <section class="reports-heading">
+
+      <div class="heading-left">
+        <div class="heading-icon">
+          <i class="bi bi-bar-chart-line"></i>
+        </div>
+
+        <div class="heading-text">
+          <h1>Relatórios</h1>
+          <p>
+            Acompanhe as vendas e o desempenho da loja.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+  <div
+  class="reports-error"
+  *ngIf="erro()"
+  role="alert"
+>
+  <i class="bi bi-exclamation-circle"></i>
+
+  <span>{{ erro() }}</span>
+
+  <button
+    type="button"
+    class="retry-button"
+    (click)="carregarRelatorios()"
+    [disabled]="carregando()"
+  >
+    <i class="bi bi-arrow-clockwise"></i>
+    Tentar novamente
+  </button>
 </div>
 
-<hr />
+    <!-- CARREGAMENTO -->
+    <div class="reports-loading" *ngIf="carregando()">
+      <div class="loading-spinner"></div>
+      <p>Carregando relatórios...</p>
+    </div>
 
-<h2>Produtos Vendidos</h2>
+    <!-- RELATÓRIOS -->
+    <div *ngIf="!carregando() && !erro()">
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>Produto</th>
-      <th>Categoria</th>
-      <th>Quantidade</th>
-      <th>Faturamento</th>
-    </tr>
-  </thead>
+      <!-- RESUMO GERAL --> 
+      <section class="summary-section" *ngIf="resumo() as resumo">
 
-  <tbody>
-    <tr *ngFor="let produto of produtos()">
-      <td>
-        {{ produto.produto_nome }}
-      </td>
+        <div class="section-heading">
+          <div>
+            <h2>Resumo geral</h2>
+            <p>Visão geral dos pedidos e resultados.</p>
+          </div>
+        </div>
 
-      <td>
-        {{ produto.categoria_nome }}
-      </td>
+        <div class="summary-grid">
 
-      <td>
-        {{ produto.quantidade_vendida }}
-      </td>
+          <!-- TOTAL DE PEDIDOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon total-icon">
+                <i class="bi bi-bag"></i>
+              </span>
+            </div>
 
-      <td>R$ {{ produto.faturamento }}</td>
-    </tr>
-  </tbody>
-</table>
+            <p class="summary-label">Total de pedidos</p>
 
-<hr />
+            <strong class="summary-value">
+              {{ resumo.total_pedidos }}
+            </strong>
 
-<h2>Vendas por Categoria</h2>
+            <span class="summary-description">
+              Pedidos registrados
+            </span>
+          </article>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>Categoria</th>
-      <th>Quantidade</th>
-      <th>Faturamento</th>
-    </tr>
-  </thead>
+          <!-- PENDENTES -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon pending-icon">
+                <i class="bi bi-clock-history"></i>
+              </span>
+            </div>
 
-  <tbody>
-    <tr *ngFor="let categoria of categorias()">
-      <td>
-        {{ categoria.categoria_nome }}
-      </td>
+            <p class="summary-label">Pendentes</p>
 
-      <td>
-        {{ categoria.quantidade_vendida }}
-      </td>
+            <strong class="summary-value">
+              {{ resumo.pedidos_pendentes }}
+            </strong>
 
-      <td>R$ {{ categoria.faturamento }}</td>
-    </tr>
-  </tbody>
-</table>
+            <span class="summary-description">
+              Aguardando confirmação
+            </span>
+          </article>
 
-<hr />
+          <!-- CONFIRMADOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon confirmed-icon">
+                <i class="bi bi-check2-circle"></i>
+              </span>
+            </div>
 
-<h2>Vendas Mensais</h2>
+            <p class="summary-label">Confirmados</p>
 
-<table border="1" *ngIf="pivot() as pivot">
-  <thead>
-    <tr>
-      <th>Categoria</th>
+            <strong class="summary-value">
+              {{ resumo.pedidos_confirmados }}
+            </strong>
 
-      <th *ngFor="let mes of pivot.colunas">
-        {{ mes }}
-      </th>
+            <span class="summary-description">
+              Pedidos confirmados
+            </span>
+          </article>
 
-      <th>Total</th>
-    </tr>
-  </thead>
+          <!-- CONCLUÍDOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon completed-icon">
+                <i class="bi bi-check2-all"></i>
+              </span>
+            </div>
 
-  <tbody>
-    <tr *ngFor="let linha of pivot.linhas">
-      <td>
-        {{ linha.categoria }}
-      </td>
+            <p class="summary-label">Concluídos</p>
 
-      <td *ngFor="let mes of pivot.colunas">R$ {{ linha.meses[mes] || 0 }}</td>
+            <strong class="summary-value">
+              {{ resumo.pedidos_concluidos }}
+            </strong>
 
-      <td>R$ {{ linha.total }}</td>
-    </tr>
-  </tbody>
-</table>
+            <span class="summary-description">
+              Pedidos finalizados
+            </span>
+          </article>
+
+          <!-- CANCELADOS -->
+          <article class="summary-card">
+            <div class="summary-card-top">
+              <span class="summary-icon canceled-icon">
+                <i class="bi bi-x-circle"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Cancelados</p>
+
+            <strong class="summary-value">
+              {{ resumo.pedidos_cancelados }}
+            </strong>
+
+            <span class="summary-description">
+              Pedidos cancelados
+            </span>
+          </article>
+
+          <!-- FATURAMENTO -->
+          <article class="summary-card revenue-card">
+            <div class="summary-card-top">
+              <span class="summary-icon revenue-icon">
+                <i class="bi bi-currency-dollar"></i>
+              </span>
+            </div>
+
+            <p class="summary-label">Faturamento realizado</p>
+
+            <strong class="summary-value revenue-value">
+              {{ resumo.faturamento_realizado | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </strong>
+
+            <span class="summary-description">
+              Total realizado em vendas
+            </span>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- PRODUTOS VENDIDOS -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-box-seam"></i>
+            </span>
+
+            <div>
+              <h2>Produtos vendidos</h2>
+              <p>Desempenho individual dos produtos.</p>
+            </div>
+          </div>
+
+          <span class="panel-count">
+            {{ produtos().length }}
+            {{ produtos().length === 1 ? 'produto' : 'produtos' }}
+          </span>
+        </div>
+
+        <div class="table-wrapper" *ngIf="produtos().length > 0">
+          <table class="report-table">
+
+            <thead>
+              <tr>
+                <th scope="col">Produto</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Quantidade vendida</th>
+                <th scope="col">Faturamento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let produto of produtos()">
+
+                <td class="item-name">
+                  {{ produto.produto_nome }}
+                </td>
+
+                <td class="item-category">
+                  {{ produto.categoria_nome }}
+                </td>
+
+                <td>
+                  <span class="quantity-badge">
+                    {{ produto.quantidade_vendida }} un.
+                  </span>
+                </td>
+
+                <td class="money-value">
+                  {{ produto.faturamento | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="report-empty" *ngIf="produtos().length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Nenhum produto vendido até o momento.</p>
+        </div>
+
+        <div class="panel-footer">
+          Exibindo {{ produtos().length }}
+          {{ produtos().length === 1 ? 'registro' : 'registros' }}
+        </div>
+
+      </section>
+
+      <!-- VENDAS POR CATEGORIA -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-tags"></i>
+            </span>
+
+            <div>
+              <h2>Vendas por categoria</h2>
+              <p>Resultados agrupados pelas categorias da loja.</p>
+            </div>
+          </div>
+
+          <span class="panel-count">
+            {{ categorias().length }}
+            {{ categorias().length === 1 ? 'categoria' : 'categorias' }}
+          </span>
+        </div>
+
+        <div class="table-wrapper" *ngIf="categorias().length > 0">
+          <table class="report-table">
+
+            <thead>
+              <tr>
+                <th scope="col">Categoria</th>
+                <th scope="col">Quantidade vendida</th>
+                <th scope="col">Faturamento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let categoria of categorias()">
+
+                <td class="item-name">
+                  {{ categoria.categoria_nome }}
+                </td>
+
+                <td>
+                  <span class="quantity-badge">
+                    {{ categoria.quantidade_vendida }} un.
+                  </span>
+                </td>
+
+                <td class="money-value">
+                  {{ categoria.faturamento | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="report-empty" *ngIf="categorias().length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Não há vendas por categoria para exibir.</p>
+        </div>
+
+        <div class="panel-footer">
+          Exibindo {{ categorias().length }}
+          {{ categorias().length === 1 ? 'registro' : 'registros' }}
+        </div>
+
+      </section>
+
+      <!-- VENDAS MENSAIS -->
+      <section class="report-panel">
+
+        <div class="panel-heading">
+          <div class="panel-title">
+            <span class="panel-icon">
+              <i class="bi bi-calendar3"></i>
+            </span>
+
+            <div>
+              <h2>Vendas mensais</h2>
+              <p>Faturamento por categoria e mês.</p>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="pivot() as pivot">
+
+          <div class="table-wrapper" *ngIf="pivot.linhas.length > 0">
+
+            <table class="report-table monthly-table">
+
+              <thead>
+                <tr>
+                  <th scope="col">Categoria</th>
+
+                  <th
+                    scope="col"
+                    *ngFor="let mes of pivot.colunas"
+                  >
+                    {{ mes }}
+                  </th>
+
+                  <th scope="col" class="total-column">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let linha of pivot.linhas">
+
+                  <td class="item-name">
+                    {{ linha.categoria }}
+                  </td>
+
+                  <td *ngFor="let mes of pivot.colunas">
+                    {{ (linha.meses[mes] || 0) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+
+                  <td class="money-value total-column">
+                    {{ linha.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+          <div class="report-empty" *ngIf="pivot.linhas.length === 0">
+            <i class="bi bi-calendar-x"></i>
+            <p>Não há dados de vendas mensais disponíveis.</p>
+          </div>
+
+        </ng-container>
+
+        <div class="report-empty" *ngIf="!pivot()">
+          <i class="bi bi-calendar-x"></i>
+          <p>Não há dados de vendas mensais disponíveis.</p>
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</main>

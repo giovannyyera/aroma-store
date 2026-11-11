@@ -1,69 +1,315 @@
-<h1>Pedidos</h1>
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+<main class="admin-orders">
 
-<p *ngIf="carregando()">Carregando...</p>
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<p>
-  <button (click)="carregar()">Todos</button>
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
+        <span class="brand-name">Aroma Store</span>
+        <span class="brand-divider"></span>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-  <button (click)="carregar('PENDENTE')">Pendentes</button>
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-  <button (click)="carregar('CONFIRMADO')">Confirmados</button>
+    </div>
+  </header>
 
-  <button (click)="carregar('CONCLUIDO')">Concluídos</button>
+  <div class="orders-container">
 
-  <button (click)="carregar('CANCELADO')">Cancelados</button>
-</p>
+    <section class="orders-heading">
+      <div class="heading-left">
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Cliente</th>
-      <th>Telefone</th>
-      <th>Status</th>
-      <th>Total</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
+        <div class="heading-icon">
+          <i class="bi bi-bag-check"></i>
+        </div>
 
-  <tbody>
-    <tr *ngFor="let pedido of pedidos()">
-      <td>#{{ pedido.id }}</td>
+        <div class="heading-text">
+          <h1>Pedidos</h1>
+          <p>
+            Acompanhe e gerencie os pedidos realizados na loja.
+          </p>
+        </div>
 
-      <td>
-        {{ pedido.cliente_nome }}
-      </td>
+      </div>
+    </section>
 
-      <td>
-        {{ pedido.cliente_telefone }}
-      </td>
+    <div
+      class="orders-error"
+      *ngIf="erro()"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
+    </div>
 
-      <td>
-        {{ pedido.status }}
-      </td>
+    <section class="orders-filter-panel">
 
-      <td>R$ {{ pedido.total | number: '1.2-2' }}</td>
+      <div class="filters-heading">
+        <i class="bi bi-funnel"></i>
+        <span>Filtrar pedidos</span>
+      </div>
 
-      <td>
-        <button *ngIf="pedido.status === 'PENDENTE'" (click)="confirmar(pedido.id)">
-          Confirmar
-        </button>
 
-        <button *ngIf="pedido.status === 'CONFIRMADO'" (click)="concluir(pedido.id)">
-          Concluir
-        </button>
+<div class="status-filter-buttons">
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroStatus() === ''"
+    [attr.aria-pressed]="filtroStatus() === ''"
+    (click)="carregar('')"
+  >
+    Todos
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroStatus() === 'PENDENTE'"
+    [attr.aria-pressed]="filtroStatus() === 'PENDENTE'"
+    (click)="carregar('PENDENTE')"
+  >
+    <span class="filter-dot pending-dot"></span>
+    Pendentes
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroStatus() === 'CONFIRMADO'"
+    [attr.aria-pressed]="filtroStatus() === 'CONFIRMADO'"
+    (click)="carregar('CONFIRMADO')"
+  >
+    <span class="filter-dot confirmed-dot"></span>
+    Confirmados
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroStatus() === 'CONCLUIDO'"
+    [attr.aria-pressed]="filtroStatus() === 'CONCLUIDO'"
+    (click)="carregar('CONCLUIDO')"
+  >
+    <span class="filter-dot completed-dot"></span>
+    Concluídos
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroStatus() === 'CANCELADO'"
+    [attr.aria-pressed]="filtroStatus() === 'CANCELADO'"
+    (click)="carregar('CANCELADO')"
+  >
+    <span class="filter-dot canceled-dot"></span>
+    Cancelados
+  </button>
+
+</div>
+
+
+    </section>
+
+    <section class="orders-panel">
+
+      <div class="panel-top">
+
+        <div>
+          <h2>Pedidos cadastrados</h2>
+          <p>Visualize e atualize o andamento dos pedidos.</p>
+        </div>
+
+        <span class="orders-total" *ngIf="!carregando()">
+          {{ pedidos().length }}
+          {{ pedidos().length === 1 ? 'pedido' : 'pedidos' }}
+        </span>
+
+      </div>
+
+      <div class="orders-loading" *ngIf="carregando()">
+        <div class="loading-spinner"></div>
+        <p>Carregando pedidos...</p>
+      </div>
+
+      <div
+        class="table-wrapper"
+        *ngIf="!carregando() && !erro() && pedidos().length > 0"
+      >
+
+        <table class="orders-table">
+
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Telefone</th>
+              <th scope="col">Status</th>
+              <th scope="col">Total</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let pedido of pedidos()">
+
+              <td class="order-id">
+                #{{ pedido.id }}
+              </td>
+
+              <td class="customer-name">
+                {{ pedido.cliente_nome }}
+              </td>
+
+              <td class="customer-phone">
+                <i class="bi bi-telephone"></i>
+                {{ pedido.cliente_telefone }}
+              </td>
+
+              <td>
+                <span
+                  class="order-status"
+                  [ngClass]="{
+                    'status-pending': pedido.status === 'PENDENTE',
+                    'status-confirmed': pedido.status === 'CONFIRMADO',
+                    'status-completed': pedido.status === 'CONCLUIDO',
+                    'status-canceled': pedido.status === 'CANCELADO'
+                  }"
+                >
+                  <span class="status-dot"></span>
+
+                  {{
+                    pedido.status === 'PENDENTE' ? 'Pendente' :
+                    pedido.status === 'CONFIRMADO' ? 'Confirmado' :
+                    pedido.status === 'CONCLUIDO' ? 'Concluído' :
+                    pedido.status === 'CANCELADO' ? 'Cancelado' :
+                    pedido.status
+                  }}
+                </span>
+              </td>
+
+              <td class="order-total">
+                {{ pedido.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+              </td>
+
+              <td>
+               
+<div class="order-actions">
+
+  <!-- Confirmar -->
+  <button
+    *ngIf="pedido.status === 'PENDENTE'"
+    type="button"
+    class="action-button confirm-button"
+    (click)="confirmar(pedido.id)"
+    [disabled]="pedidoAtualizando() !== null"
+  >
+    <i class="bi bi-check-lg"></i>
+
+    {{
+      pedidoAtualizando() === pedido.id
+        ? 'Aguarde...'
+        : 'Confirmar'
+    }}
+  </button>
+
+  <!-- Concluir -->
+  <button
+    *ngIf="pedido.status === 'CONFIRMADO'"
+    type="button"
+    class="action-button complete-button"
+    (click)="concluir(pedido.id)"
+    [disabled]="pedidoAtualizando() !== null"
+  >
+    <i class="bi bi-check2-all"></i>
+
+    {{
+      pedidoAtualizando() === pedido.id
+        ? 'Aguarde...'
+        : 'Concluir'
+    }}
+  </button>
+
+  <!-- Cancelar -->
+  <button
+    *ngIf="
+      pedido.status === 'PENDENTE' ||
+      pedido.status === 'CONFIRMADO'
+    "
+    type="button"
+    class="action-button cancel-order-button"
+    (click)="cancelar(pedido.id)"
+    [disabled]="pedidoAtualizando() !== null"
+  >
+    <i class="bi bi-x-lg"></i>
+
+    {{
+      pedidoAtualizando() === pedido.id
+        ? 'Aguarde...'
+        : 'Cancelar'
+    }}
+  </button>
+
+  <!-- Finalizado -->
+  <span
+    *ngIf="
+      pedido.status === 'CONCLUIDO' ||
+      pedido.status === 'CANCELADO'
+    "
+    class="finished-order"
+  >
+    <i class="bi bi-lock"></i>
+    Finalizado
+  </span>
+
+</div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="orders-empty"
+        *ngIf="!carregando() && !erro() && pedidos().length === 0"
+      >
+        <div class="empty-icon">
+          <i class="bi bi-bag-x"></i>
+        </div>
+
+        <h3>Nenhum pedido encontrado.</h3>
+
+        <p>
+          Não existem pedidos para o filtro selecionado.
+        </p>
 
         <button
-          *ngIf="pedido.status === 'PENDENTE' || pedido.status === 'CONFIRMADO'"
-          (click)="cancelar(pedido.id)"
+          type="button"
+          class="empty-reset-button"
+          (click)="carregar()"
         >
-          Cancelar
+          Ver todos os pedidos
         </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      </div>
+
+      <div
+        class="orders-table-footer"
+        *ngIf="!carregando() && !erro()"
+      >
+        Exibindo {{ pedidos().length }}
+        {{ pedidos().length === 1 ? 'pedido' : 'pedidos' }}
+      </div>
+
+    </section>
+
+  </div>
+
+</main>

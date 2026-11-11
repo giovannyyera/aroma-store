@@ -1,26 +1,61 @@
-<p>login works!</p>
-<h1>Área Administrativa</h1>
 
-<form (ngSubmit)="entrar()">
-  <label>
-    Usuário
-    <input type="text" name="username" [(ngModel)]="username" required />
-  </label>
+<main class="admin-login-page">
 
-  <br /><br />
+  <section class="login-card">
 
-  <label>
-    Senha
-    <input type="password" name="password" [(ngModel)]="password" required />
-  </label>
+    <div class="login-header">
+      <div class="login-icon">
+        <i class="bi bi-lock"></i>
+      </div>
 
-  <br /><br />
+      <h1>Administrador</h1>
+      <p>Informe suas credenciais .</p>
+    </div>
 
-  <p *ngIf="erro()">
-    {{ erro() }}
-  </p>
+    <form (ngSubmit)="entrar()" #loginForm="ngForm">
 
-  <button type="submit" [disabled]="enviando()">
-    {{ enviando() ? 'Entrando...' : 'Entrar' }}
-  </button>
-</form>
+      <div class="form-field">
+        <label for="username">Usuário</label>
+
+        <input
+          id="username"
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          placeholder="Digite seu usuário"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Senha</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Digite sua senha"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <div class="login-error" *ngIf="erro()" role="alert">
+        {{ erro() }}
+      </div>
+
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="enviando() || loginForm.invalid"
+      >
+        {{ enviando() ? 'Entrando...' : 'ENTRAR' }}
+      </button>
+
+    </form>
+
+  </section>
+
+</main>

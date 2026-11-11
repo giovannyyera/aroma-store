@@ -1,0 +1,765 @@
+
+/* ==========================================
+   AROMA STORE — RELATÓRIOS ADMINISTRATIVOS
+========================================== */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.admin-reports,
+.admin-reports *,
+.admin-reports *::before,
+.admin-reports *::after {
+  box-sizing: border-box;
+}
+
+.admin-reports {
+  min-height: 100vh;
+  background: #f7f8f6;
+  color: #183d2b;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.admin-header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  background: #153c29;
+  color: #fff;
+}
+
+.admin-header-content {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand-icon {
+  font-size: 23px;
+}
+
+.brand-name {
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, .3);
+}
+
+.admin-header-title {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.back-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 7px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-dashboard:hover {
+  background: rgba(255, 255, 255, .1);
+}
+
+/* ==========================================
+   CONTEÚDO
+========================================== */
+
+.reports-container {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 36px 36px 70px;
+}
+
+/* TÍTULO */
+
+.reports-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.heading-left {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.heading-icon {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #e8f0e7;
+  color: #153c29;
+  font-size: 27px;
+}
+
+.heading-text h1 {
+  margin: 0 0 5px;
+  font-family: Georgia, serif;
+  font-size: 33px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.heading-text p {
+  margin: 0;
+  color: #768278;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   TÍTULOS DE SEÇÃO
+========================================== */
+
+.section-heading {
+  margin-bottom: 17px;
+}
+
+.section-heading h2 {
+  margin: 0 0 5px;
+  color: #21432f;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #829084;
+  font-size: 12px;
+}
+
+/* ==========================================
+   CARDS — RESUMO GERAL
+========================================== */
+
+.summary-section {
+  margin-bottom: 31px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 158px;
+  padding: 17px 16px;
+  background: #fff;
+  border: 1px solid #e6ebe5;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(20, 45, 29, .025);
+  transition: border-color .2s ease;
+}
+
+.summary-card:hover {
+  border-color: #c5d6c7;
+}
+
+.summary-card-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.summary-icon {
+  width: 33px;
+  height: 33px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.total-icon {
+  background: #e8f0e7;
+  color: #245b36;
+}
+
+.pending-icon {
+  background: #fff3df;
+  color: #a36d28;
+}
+
+.confirmed-icon {
+  background: #e8f0fa;
+  color: #3f6fa5;
+}
+
+.completed-icon {
+  background: #e8f5e9;
+  color: #2b8245;
+}
+
+.canceled-icon {
+  background: #faeaec;
+  color: #ad4852;
+}
+
+.revenue-icon {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+}
+
+.summary-label {
+  margin: 0 0 7px;
+  color: #6c7b6f;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.summary-value {
+  display: block;
+  margin-bottom: 7px;
+  color: #193d29;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-description {
+  margin-top: auto;
+  color: #97a198;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.revenue-card {
+  background: #153c29;
+  border-color: #153c29;
+}
+
+.revenue-card .summary-label {
+  color: #d5e2d8;
+}
+
+.revenue-card .summary-description {
+  color: #bdd0c2;
+}
+
+.revenue-value {
+  color: #fff;
+  font-size: clamp(17px, 1.5vw, 24px);
+  overflow-wrap: anywhere;
+}
+
+.revenue-card:hover {
+  border-color: #326b48;
+}
+
+/* ==========================================
+   PAINÉIS DE RELATÓRIOS
+========================================== */
+
+.report-panel {
+  margin-bottom: 22px;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #e6ebe5;
+  border-radius: 11px;
+  box-shadow: 0 4px 18px rgba(20, 45, 29, .035);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 7px 5px 18px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.panel-icon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf3eb;
+  color: #285b38;
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+.panel-title h2 {
+  margin: 0 0 5px;
+  color: #284633;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.panel-title p {
+  margin: 0;
+  color: #829085;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.panel-count {
+  padding: 6px 10px;
+  background: #eef3ed;
+  border-radius: 5px;
+  color: #4b6a53;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   TABELAS
+========================================== */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.report-table {
+  width: 100%;
+  min-width: 660px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #2c3a30;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-table thead {
+  background: #edf3eb;
+}
+
+.report-table th {
+  height: 43px;
+  padding: 10px 15px;
+  color: #284935;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.report-table th:first-child {
+  border-radius: 7px 0 0 7px;
+}
+
+.report-table th:last-child {
+  border-radius: 0 7px 7px 0;
+}
+
+.report-table td {
+  height: 53px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #edf0eb;
+  vertical-align: middle;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.report-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.report-table tbody tr:hover {
+  background: #fafcf9;
+}
+
+.item-name {
+  color: #1c442d;
+  font-size: 13px !important;
+  font-weight: 700;
+}
+
+.item-category {
+  color: #69796d;
+}
+
+.quantity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #edf3eb;
+  color: #356b42;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.money-value {
+  color: #245b37;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.panel-footer {
+  margin-top: 13px;
+  padding: 7px 3px 2px;
+  color: #899289;
+  font-size: 11px;
+}
+
+/* ==========================================
+   TABELA MENSAL
+========================================== */
+
+.monthly-table {
+  min-width: 850px;
+}
+
+.monthly-table th,
+.monthly-table td {
+  white-space: nowrap;
+}
+
+.monthly-table td:not(:first-child) {
+  color: #4c6252;
+}
+
+.monthly-table .total-column {
+  background: #f1f6f0;
+  color: #245b37;
+  font-weight: 700;
+}
+
+.monthly-table th.total-column {
+  background: #e1eddf;
+}
+
+.monthly-table td.total-column {
+  color: #245b37;
+}
+
+/* ==========================================
+   ESTADO VAZIO
+========================================== */
+
+.report-empty {
+  min-height: 145px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #879389;
+  text-align: center;
+}
+
+.report-empty i {
+  font-size: 28px;
+  color: #a0ada2;
+}
+
+.report-empty p {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* ==========================================
+   ERROS E CARREGAMENTO
+========================================== */
+
+.reports-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 19px;
+  padding: 13px 15px;
+  border: 1px solid #f0d1d5;
+  border-radius: 7px;
+  background: #fff3f4;
+  color: #a04150;
+  font-size: 12px;
+}
+
+.reports-loading {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e6ebe5;
+  border-radius: 11px;
+  color: #7e8a80;
+  font-size: 12px;
+}
+
+.loading-spinner {
+  width: 29px;
+  height: 29px;
+  border: 3px solid #e3ece2;
+  border-top-color: #153c29;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+@media (max-width: 1250px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 950px) {
+  .admin-header-content {
+    padding: 0 24px;
+  }
+
+  .reports-container {
+    padding: 30px 24px 60px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+  }
+
+  .admin-header-title {
+    font-size: 18px;
+  }
+
+  .heading-text h1 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 650px) {
+  .admin-header {
+    height: 65px;
+  }
+
+  .admin-header-content {
+    padding: 0 16px;
+  }
+
+  .admin-brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    font-size: 20px;
+  }
+
+  .brand-name {
+    font-size: 21px;
+  }
+
+  .brand-divider,
+  .admin-header-title {
+    display: none;
+  }
+
+  .reports-container {
+    padding: 26px 14px 50px;
+  }
+
+  .reports-heading {
+    margin-bottom: 24px;
+  }
+
+  .heading-left {
+    gap: 13px;
+  }
+
+  .heading-icon {
+    width: 49px;
+    height: 49px;
+    flex-basis: 49px;
+    font-size: 23px;
+  }
+
+  .heading-text h1 {
+    font-size: 28px;
+  }
+
+  .heading-text p {
+    font-size: 12px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .summary-card {
+    min-height: 147px;
+    padding: 14px;
+  }
+
+  .summary-value {
+    font-size: 25px;
+  }
+
+  .revenue-value {
+    font-size: 18px;
+  }
+
+  .section-heading h2 {
+    font-size: 20px;
+  }
+
+  .report-panel {
+    padding: 10px;
+  }
+
+  .panel-heading {
+    gap: 10px;
+  }
+
+  .panel-title {
+    gap: 9px;
+  }
+
+  .panel-icon {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+  }
+
+  .panel-title h2 {
+    font-size: 13px;
+  }
+
+  .panel-title p {
+    font-size: 10px;
+  }
+
+  .panel-count {
+    font-size: 10px;
+  }
+
+  .report-table th {
+    padding: 10px 12px;
+  }
+
+  .report-table td {
+    padding: 11px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+  }
+
+  .summary-card {
+    transition: none;
+  }
+}
+.reports-error > span {
+  flex: 1;
+}
+
+.retry-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 32px;
+  padding: 0 12px;
+
+  border: 1px solid #dba9af;
+  border-radius: 6px;
+  background: #ffffff;
+
+  color: #a04150;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  cursor: pointer;
+}
+
+.retry-button:hover:not(:disabled) {
+  background: #fff8f8;
+}
+
+.retry-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 650px) {
+  .reports-error {
+    flex-wrap: wrap;
+  }
+
+  .retry-button {
+    width: 100%;
+  }
+}

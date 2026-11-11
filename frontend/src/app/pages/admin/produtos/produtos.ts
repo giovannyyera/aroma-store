@@ -1,12 +1,14 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { AdminProdutosService } from '../../../core/services/admin-produtos.service';
 import { AdminProduto } from '../../../models/admin-produto.model';
 
-
+type FiltroStatus = '' | 'true' | 'false';
 
 @Component({
   selector: 'app-produtos-admin',
@@ -27,6 +29,10 @@ export class ProdutosAdmin implements OnInit {
 
   busca = '';
 
+  filtroAtivo = signal<FiltroStatus>('');
+
+  produtoAtualizando = signal<number | null>(null);
+
   constructor(
     private produtosService: AdminProdutosService
   ) {}
@@ -35,15 +41,20 @@ export class ProdutosAdmin implements OnInit {
     this.carregar();
   }
 
-  carregar(
-    ativo = ''
-  ): void {
+  carregar(ativo?: FiltroStatus): void {
+
+    if (ativo !== undefined) {
+      this.filtroAtivo.set(ativo);
+    }
 
     this.carregando.set(true);
     this.erro.set('');
 
+    const buscaAtual = this.busca.trim();
+    const statusAtual = this.filtroAtivo();
+
     this.produtosService
-      .listar(this.busca, ativo)
+      .listar(buscaAtual, statusAtual)
       .subscribe({
 
         next: (dados) => {
@@ -62,14 +73,62 @@ export class ProdutosAdmin implements OnInit {
   }
 
   ativar(id: number): void {
-    this.produtosService.ativar(id).subscribe({
-      next: () => this.carregar()
-    });
+
+    if (this.produtoAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.produtoAtualizando.set(id);
+
+    this.produtosService
+      .ativar(id)
+      .pipe(
+        finalize(() => {
+          this.produtoAtualizando.set(null);
+        })
+      )
+      .subscribe({
+
+        next: () => {
+          this.carregar();
+        },
+
+        error: () => {
+          this.erro.set(
+            'Não foi possível reativar o produto.'
+          );
+        }
+      });
   }
 
   desativar(id: number): void {
-    this.produtosService.desativar(id).subscribe({
-      next: () => this.carregar()
-    });
+
+    if (this.produtoAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.produtoAtualizando.set(id);
+
+    this.produtosService
+      .desativar(id)
+      .pipe(
+        finalize(() => {
+          this.produtoAtualizando.set(null);
+        })
+      )
+      .subscribe({
+
+        next: () => {
+          this.carregar();
+        },
+
+        error: () => {
+          this.erro.set(
+            'Não foi possível desativar o produto.'
+          );
+        }
+      });
   }
 }

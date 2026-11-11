@@ -1,31 +1,292 @@
-<h1>Carrinho</h1>
+<header class="site-header">
+  <div class="announcement-bar">
+    <span>FEITO À MÃO, COM PAZ E AMOR</span>
+    <span class="separator">•</span>
+    <span>SEJA BEM-VINDO(a)</span>
+  </div>
 
-<p *ngIf="carrinhoService.itens().length === 0">Seu carrinho está vazio.</p>
+  <div class="header-main">
+    <!-- Logo original -->
+    <a routerLink="/" class="header-logo" aria-label="Página inicial">
+      <img src="Logo.png" alt="Ateliê Casa Sensorial" />
+    </a>
 
-<div *ngFor="let item of carrinhoService.itens()">
-  <h2>
-    {{ item.produto.nome }}
-  </h2>
+    <!-- Navegação desktop -->
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a routerLink="/">Inicio</a>
+      <a routerLink="/produtos">Produtos</a>
+      <a routerLink="/carrinho">Carrinho</a>
+    </nav>
 
-  <p>Preço unitário: R$ {{ item.produto.preco }}</p>
+    <!-- Ícones -->
+    <div class="header-actions">
+      <button type="button" class="icon-button"
+              aria-label="Pesquisar"
+              (click)="toggleSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.8" cy="10.8" r="6.8"></circle>
+          <path d="m16 16 4.5 4.5"></path>
+        </svg>
+      </button>
 
-  <p>Quantidade: {{ item.quantidade }}</p>
+      <!--<a routerLink="/favoritos" class="icon-button"
+         aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.8 8.4c0 4.8-8.8 11-8.8 11s-8.8-6.2-8.8-11a4.8 4.8 0 0 1 8.8-2.6 4.8 4.8 0 0 1 8.8 2.6Z"></path>
+        </svg>
+      </a>-->
 
-  <button type="button" (click)="diminuir(item.produto.id)">-</button>
+      <a routerLink="/carrinho" class="icon-button cart-button"
+         aria-label="Carrinho">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="7" width="16" height="14" rx="2"></rect>
+          <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+        </svg>
+        <span class="cart-count">{{ cartCount }}</span>
+      </a>
 
-  <button type="button" (click)="aumentar(item.produto.id)">+</button>
+      <button type="button" class="icon-button mobile-toggle"
+              [attr.aria-expanded]="menuOpen"
+              aria-controls="mobile-navigation"
+              aria-label="Abrir ou fechar menu"
+              (click)="toggleMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round">
+          <path *ngIf="!menuOpen" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path *ngIf="menuOpen" d="M5 5l14 14M19 5 5 19"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 
-  <button type="button" (click)="remover(item.produto.id)">Remover</button>
+  <div class="search-panel" *ngIf="searchOpen">
+    <form (ngSubmit)="submitSearch()">
+      <input
+        type="search"
+        name="search"
+        [(ngModel)]="searchTerm"
+        placeholder="O que você está procurando?"
+        aria-label="Buscar produtos"
+      />
+      <button type="submit">Buscar</button>
+    </form>
+  </div>
 
-  <hr />
-</div>
+  <!-- Menu mobile -->
+  <nav id="mobile-navigation"
+       class="mobile-nav"
+       *ngIf="menuOpen"
+       aria-label="Navegação mobile">
+    <a routerLink="/produtos" (click)="closeMenu()">Comprar</a>
+    <a routerLink="/sobre" (click)="closeMenu()">Sobre a empreendedora</a>
+    <a routerLink="/guias-de-aromas" (click)="closeMenu()">Guias de aromas</a>
+  </nav>
+</header>
 
-<p *ngIf="carrinhoService.itens().length > 0">
-  Total: R$ {{ carrinhoService.valorTotal() | number: '1.2-2' }}
-</p>
 
-<p *ngIf="carrinhoService.itens().length > 0">
-  <a routerLink="/checkout"> Ir para checkout </a>
-</p>
+<main class="cart-page">
 
-<a routerLink="/produtos"> Continuar comprando </a>
+  <div class="cart-container">
+
+    <div class="cart-heading">
+      <span class="cart-eyebrow">SUA SELEÇÃO</span>
+
+      <h1>Seu carrinho<span class="title-dot">.</span></h1>
+
+      <p>
+        Confira os itens escolhidos e finalize seu pedido
+        com calma e carinho.
+      </p>
+    </div>
+
+
+<!-- Carrinho vazio -->
+<section
+  class="empty-cart"
+  *ngIf="carrinhoService.itens().length === 0"
+>
+  <div class="empty-cart-icon">
+    <svg viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="1.3"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+      <path d="M5 8h14l1 13H4L5 8Z"/>
+      <path d="M9 9V6a3 3 0 0 1 6 0v3"/>
+    </svg>
+  </div>
+
+  <h2>Seu carrinho está vazio.</h2>
+
+  <p>
+    Nenhum produto foi adicionado ao carrinho.
+  </p>
+
+  <a routerLink="/produtos" class="empty-cart-button">
+    VER CATÁLOGO
+    <span aria-hidden="true">→</span>
+  </a>
+</section>
+
+
+    <!-- Carrinho com produtos -->
+    <div
+      class="cart-layout"
+      *ngIf="carrinhoService.itens().length > 0"
+    >
+
+      <section class="cart-products">
+
+        <div class="cart-products-heading">
+          <h2>
+            Seus produtos
+            <span class="items-count">
+              ({{ carrinhoService.itens().length }})
+            </span>
+          </h2>
+        </div>
+
+        <div
+          class="cart-product"
+          *ngFor="let item of carrinhoService.itens()"
+        >
+
+          <div class="product-image">
+            <span>AROMA STORE</span>
+          </div>
+
+          <div class="product-details">
+
+            <h3>{{ item.produto.nome }}</h3>
+
+            <p class="product-description">
+              Feito artesanalmente, com cuidado.
+            </p>
+
+            <p class="product-price">
+              R$ {{ item.produto.preco | number:'1.2-2' }}
+            </p>
+
+            <div class="product-controls">
+
+              <div class="quantity-control">
+
+                <button
+                  type="button"
+                  (click)="diminuir(item.produto.id)"
+                  aria-label="Diminuir quantidade"
+                >
+                  −
+                </button>
+
+                <span>{{ item.quantidade }}</span>
+
+                <button
+                  type="button"
+                  (click)="aumentar(item.produto.id)"
+                  aria-label="Aumentar quantidade"
+                >
+                  +
+                </button>
+
+              </div>
+
+              <button
+                type="button"
+                class="remove-product"
+                (click)="remover(item.produto.id)"
+                aria-label="Remover produto"
+                title="Remover produto"
+              >
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.6"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                  <path d="M3 6h18"/>
+                  <path d="M8 6V4h8v2"/>
+                  <path d="M5 6l1 15h12l1-15"/>
+                  <path d="M10 10v7M14 10v7"/>
+                </svg>
+                <span>Remover</span>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <a routerLink="/produtos" class="continue-shopping">
+          <span aria-hidden="true">←</span>
+          CONTINUAR COMPRANDO
+        </a>
+
+      </section>
+
+      <aside class="cart-summary">
+
+        <div class="summary-header">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 8h14l1 13H4L5 8Z"/>
+            <path d="M9 9V6a3 3 0 0 1 6 0v3"/>
+          </svg>
+
+          <h2>Resumo do pedido</h2>
+        </div>
+
+        <div class="summary-content">
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+
+            <strong>
+              R$ {{ carrinhoService.valorTotal() | number:'1.2-2' }}
+            </strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Entrega</span>
+            <span>A combinar</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Total dos produtos</span>
+
+            <strong>
+              R$ {{ carrinhoService.valorTotal() | number:'1.2-2' }}
+            </strong>
+          </div>
+
+          <p class="summary-note">
+            O valor da entrega será combinado
+            durante a finalização do pedido.
+          </p>
+
+          <a routerLink="/checkout" class="checkout-button">
+              <i class="bi bi-whatsapp" aria-hidden="true"></i>
+            <span>FINALIZAR PEDIDO</span>
+            <span aria-hidden="true">→</span>
+          </a>
+
+          <p class="checkout-security">
+            Seus dados serão utilizados apenas
+            para processar seu pedido.
+          </p>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</main>

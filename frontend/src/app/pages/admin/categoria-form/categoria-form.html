@@ -1,45 +1,231 @@
-<h1>
-  {{ categoriaId ? 'Editar Categoria' : 'Nova Categoria' }}
-</h1>
 
-<p *ngIf="carregando()">Carregando...</p>
+<main class="admin-category-form-page">
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+  <!-- Header administrativo -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<form *ngIf="!carregando()" (ngSubmit)="salvar()">
-  <label>
-    Nome
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
 
-    <input type="text" name="nome" [(ngModel)]="nome" required />
-  </label>
+        <span class="brand-name">Aroma Store</span>
 
-  <br /><br />
+        <span class="brand-divider"></span>
 
-  <label>
-    Descrição
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-    <br />
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-    <textarea name="descricao" [(ngModel)]="descricao"></textarea>
-  </label>
+    </div>
+  </header>
 
-  <br /><br />
+  <!-- Conteúdo -->
+  <div class="category-form-container">
 
-  <label>
-    <input type="checkbox" name="ativo" [(ngModel)]="ativo" />
+    <!-- Caminho -->
+    <nav class="breadcrumb" aria-label="Navegação">
+      <a routerLink="/admin">Painel</a>
+      <i class="bi bi-chevron-right"></i>
 
-    Categoria ativa
-  </label>
+      <a routerLink="/admin/categorias">
+        Categorias
+      </a>
 
-  <br /><br />
+      <i class="bi bi-chevron-right"></i>
 
-  <button type="submit" [disabled]="salvando()">
-    {{ salvando() ? 'Salvando...' : 'Salvar' }}
-  </button>
-</form>
+      <span>
+        {{ categoriaId ? 'Editar categoria' : 'Nova categoria' }}
+      </span>
+    </nav>
 
-<br />
+    <!-- Título -->
+    <section class="page-heading">
 
-<a routerLink="/admin/categorias"> Voltar </a>
+      <div class="heading-left">
+
+        <div class="heading-icon">
+          <i
+            class="bi"
+            [ngClass]="categoriaId ? 'bi-pencil-square' : 'bi-plus-square'"
+          ></i>
+        </div>
+
+        <div class="heading-text">
+
+          <h1>
+            {{ categoriaId ? 'Editar Categoria' : 'Nova Categoria' }}
+          </h1>
+
+          <p>
+            {{
+              categoriaId
+                ? 'Atualize as informações da categoria.'
+                : 'Cadastre uma nova categoria para organizar seus produtos.'
+            }}
+          </p>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Erro -->
+    <div
+      class="form-error"
+      *ngIf="erro()"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
+    </div>
+
+    <!-- Carregamento -->
+    <div class="form-loading" *ngIf="carregando()">
+      <div class="loading-spinner"></div>
+      <p>Carregando informações...</p>
+    </div>
+
+    <!-- Formulário -->
+    <form
+      *ngIf="!carregando()"
+      #categoriaForm="ngForm"
+      class="category-form-card"
+      (ngSubmit)="salvar()"
+    >
+
+      <div class="form-card-heading">
+        <div>
+          <h2>Informações da categoria</h2>
+          <p>Preencha os campos abaixo para continuar.</p>
+        </div>
+
+        <span class="required-note">
+          * Campo obrigatório
+        </span>
+      </div>
+
+      <div class="form-fields">
+
+        <!-- Nome -->
+        <div class="form-field">
+
+          <label for="categoria-nome">
+            Nome da categoria <span>*</span>
+          </label>
+
+          <input
+            id="categoria-nome"
+            type="text"
+            name="nome"
+            [(ngModel)]="nome"
+            #nomeCampo="ngModel"
+            placeholder="Ex.: Velas Aromáticas"
+            autocomplete="off"
+            maxlength="120"
+            required
+          />
+
+          <small
+            class="field-error"
+            *ngIf="
+              nomeCampo.invalid &&
+              (nomeCampo.touched || categoriaForm.submitted)
+            "
+          >
+            Informe o nome da categoria.
+          </small>
+
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-field">
+
+          <label for="categoria-descricao">
+            Descrição
+            <span class="optional">(opcional)</span>
+          </label>
+
+          <textarea
+            id="categoria-descricao"
+            name="descricao"
+            [(ngModel)]="descricao"
+            rows="4"
+            placeholder="Descreva brevemente os produtos desta categoria..."
+          ></textarea>
+
+
+
+        </div>
+
+        <!-- Status -->
+        <div class="category-status-section">
+
+          <div class="status-information">
+            <h3>Disponibilidade da categoria</h3>
+
+            <p>
+              Controle se esta categoria ficará ativa
+              ou inativa no sistema.
+            </p>
+          </div>
+
+          <label class="status-toggle">
+
+            <input
+              type="checkbox"
+              name="ativo"
+              [(ngModel)]="ativo"
+            />
+
+            <span class="toggle-switch"></span>
+
+            <span class="toggle-label">
+              {{ ativo ? 'Ativa' : 'Inativa' }}
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Rodapé -->
+      <div class="form-actions">
+
+        <a
+          routerLink="/admin/categorias"
+          class="cancel-button"
+        >
+          Cancelar
+        </a>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="salvando() || carregando() || categoriaForm.invalid"
+        >
+          <i
+            class="bi"
+            [ngClass]="salvando() ? 'bi-arrow-repeat' : 'bi-check-lg'"
+          ></i>
+
+          <span>
+            {{
+              salvando()
+                ? 'Salvando...'
+                : categoriaId
+                  ? 'Salvar alterações'
+                  : 'Cadastrar categoria'
+            }}
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</main>

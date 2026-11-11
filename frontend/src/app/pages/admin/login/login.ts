@@ -28,19 +28,35 @@ export class Login {
   ) {}
 
   entrar(): void {
+
+    if (this.enviando()) {
+      return;
+    }
+
     this.erro.set('');
+
+    const usuario = this.username.trim();
+
+    if (!usuario || !this.password) {
+      this.erro.set(
+        'Informe seu usuário e sua senha.'
+      );
+      return;
+    }
+
     this.enviando.set(true);
 
     this.authService.login(
-      this.username,
+      usuario,
       this.password
     ).subscribe({
+
       next: () => {
         this.enviando.set(false);
 
-        this.router.navigate([
-          '/admin'
-        ]);
+        this.password = '';
+
+        this.router.navigate(['/admin']);
       },
 
       error: (erro) => {
@@ -50,7 +66,6 @@ export class Login {
           this.erro.set(
             'Usuário ou senha inválidos.'
           );
-
           return;
         }
 
@@ -58,12 +73,18 @@ export class Login {
           this.erro.set(
             'Usuário sem permissão administrativa.'
           );
+          return;
+        }
 
+        if (erro.status === 0) {
+          this.erro.set(
+            'Não foi possível conectar ao servidor. Verifique sua conexão.'
+          );
           return;
         }
 
         this.erro.set(
-          'Não foi possível realizar o login.'
+          'Não foi possível realizar o login. Tente novamente.'
         );
       }
     });

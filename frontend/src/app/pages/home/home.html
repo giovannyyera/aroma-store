@@ -1,8 +1,131 @@
-<p>home works!</p>
-<h1>Aroma Store</h1>
 
-<p>Bem-vindo à nossa loja de produtos aromáticos.</p>
+<header class="site-header">
+  <div class="announcement-bar">
+    <span>FEITO À MÃO, COM PAZ E AMOR</span>
+    <span class="separator">•</span>
+    <span>SEJA BEM-VINDO(a)</span>
+  </div>
 
-<p>Conheça nossos produtos e encontre opções para diferentes momentos.</p>
+  <div class="header-main">
+    <!-- Logo original -->
+    <a routerLink="/" class="header-logo" aria-label="Página inicial">
+      <img src="Logo.png" alt="Ateliê Casa Sensorial" />
+    </a>
 
-<a routerLink="/produtos"> Ver produtos </a>
+    <!-- Navegação desktop -->
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a routerLink="/">Inicio</a>
+      <a routerLink="/produtos">Produtos</a>
+      <a routerLink="/carrinho">Carrinho</a>
+    </nav>
+
+    <!-- Ícones -->
+    <div class="header-actions">
+      <button type="button" class="icon-button"
+              aria-label="Pesquisar"
+              (click)="toggleSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.8" cy="10.8" r="6.8"></circle>
+          <path d="m16 16 4.5 4.5"></path>
+        </svg>
+      </button>
+
+      <!-- <a routerLink="/favoritos" class="icon-button"
+         aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.8 8.4c0 4.8-8.8 11-8.8 11s-8.8-6.2-8.8-11a4.8 4.8 0 0 1 8.8-2.6 4.8 4.8 0 0 1 8.8 2.6Z"></path>
+        </svg>
+      </a>-->
+
+      <a routerLink="/carrinho" class="icon-button cart-button"
+         aria-label="Carrinho">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="7" width="16" height="14" rx="2"></rect>
+          <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+        </svg>
+        <span class="cart-count">{{ cartCount }}</span>
+      </a>
+
+      <button type="button" class="icon-button mobile-toggle"
+              [attr.aria-expanded]="menuOpen"
+              aria-controls="mobile-navigation"
+              aria-label="Abrir ou fechar menu"
+              (click)="toggleMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round">
+          <path *ngIf="!menuOpen" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path *ngIf="menuOpen" d="M5 5l14 14M19 5 5 19"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Busca -->
+  <div class="search-panel" *ngIf="searchOpen">
+    <form (ngSubmit)="submitSearch()">
+      <input
+        type="search"
+        name="search"
+        [(ngModel)]="searchTerm"
+        placeholder="O que você está procurando?"
+        aria-label="Buscar produtos"
+      />
+      <button type="submit">Buscar</button>
+    </form>
+  </div>
+
+  <!-- Menu mobile -->
+  <nav id="mobile-navigation"
+       class="mobile-nav"
+       *ngIf="menuOpen"
+       aria-label="Navegação mobile">
+    <a routerLink="/produtos" (click)="closeMenu()">Comprar</a>
+    <a routerLink="/sobre" (click)="closeMenu()">Sobre a empreendedora</a>
+    <a routerLink="/guias-de-aromas" (click)="closeMenu()">Guias de aromas</a>
+  </nav>
+</header>
+
+<section class="home-hero" style="background-image: url(banner.png);">
+  <div class="hero-overlay">
+    <div class="hero-content">
+      <span class="hero-kicker">PEQUENOS RITUAIS, GRANDES PAUSAS</span>
+
+      <h1 class="hero-title">
+        Aromas para
+        <span>voltar para si.</span>
+      </h1>
+
+      <p class="hero-description">
+        Conheça nossos produtos e encontre opções para diferentes momentos.
+        Velas, banhos e perfumes de ambiente feitos
+        para desacelerar o dia.
+      </p>
+
+      <a routerLink="/produtos" class="hero-button">
+        <span>EXPLORAR COLEÇÃO</span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+<section class="home-story">
+  <div class="story-container">
+    <span class="story-kicker">FEITO POR UMA PESSOA, PARA A SUA CASA</span>
+
+    <h2 class="story-title">O luxo de não ter pressa.</h2>
+
+    <p class="story-description">
+      Cada peça é produzida pela empreendedora em pequenos lotes, somente
+      após o pedido. Assim, você recebe um produto fresco, feito com
+      ingredientes honestos e muito cuidado.
+    </p>
+
+    <a routerLink="/sobre" class="story-link">
+      <span>CONHEÇA ESSA HISTÓRIA</span>
+      <span class="story-arrow">→</span>
+    </a>
+  </div>
+</section>

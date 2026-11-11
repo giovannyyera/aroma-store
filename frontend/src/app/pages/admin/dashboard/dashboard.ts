@@ -1,11 +1,14 @@
+
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -19,17 +22,12 @@ export class Dashboard {
   sair(): void {
     this.authService.logout().subscribe({
       next: () => {
-        this.router.navigate([
-          '/admin/login'
-        ]);
+        this.router.navigate(['/admin/login']);
       },
 
       error: () => {
         this.authService.limparSessao();
-
-        this.router.navigate([
-          '/admin/login'
-        ]);
+        this.router.navigate(['/admin/login']);
       }
     });
   }

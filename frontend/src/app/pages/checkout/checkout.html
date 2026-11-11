@@ -1,125 +1,652 @@
-<h1>Checkout</h1>
-
-<p *ngIf="carrinhoService.itens().length === 0 && !pedidoCriado()">Seu carrinho está vazio.</p>
-
-<form *ngIf="carrinhoService.itens().length > 0 && !pedidoCriado()" (ngSubmit)="finalizarPedido()">
-  <h2>Dados pessoais</h2>
-
-  <label>
-    Nome
-    <input type="text" name="nome" [(ngModel)]="nome" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    E-mail
-    <input type="email" name="email" [(ngModel)]="email" />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Telefone
-    <input
-      type="text"
-      name="telefone"
-      [(ngModel)]="telefone"
-      (input)="formatarTelefone()"
-      maxlength="15"
-      placeholder="(18) 99999-9999"
-      required
-    />
-  </label>
-
-  <h2>Endereço</h2>
-
-  <label>
-    CEP
-    <input type="text" name="cep" [(ngModel)]="cep" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Endereço
-    <input type="text" name="endereco" [(ngModel)]="endereco" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Número
-    <input type="text" name="numero" [(ngModel)]="numero" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Complemento
-    <input type="text" name="complemento" [(ngModel)]="complemento" />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Bairro
-    <input type="text" name="bairro" [(ngModel)]="bairro" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Cidade
-    <input type="text" name="cidade" [(ngModel)]="cidade" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Estado
-    <input type="text" name="estado" [(ngModel)]="estado" maxlength="2" required />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Observação
-    <textarea name="observacao" [(ngModel)]="observacao"></textarea>
-  </label>
-
-  <h2>Resumo</h2>
-
-  <div *ngFor="let item of carrinhoService.itens()">
-    <p>
-      {{ item.produto.nome }}
-      -
-      {{ item.quantidade }}
-      x R$ {{ item.produto.preco }}
-    </p>
+<header class="site-header">
+  <div class="announcement-bar">
+    <span>FEITO À MÃO, COM PAZ E AMOR</span>
+    <span class="separator">•</span>
+    <span>SEJA BEM-VINDO(a)</span>
   </div>
 
-  <p>Total: R$ {{ carrinhoService.valorTotal() | number: '1.2-2' }}</p>
+  <div class="header-main">
+    <!-- Logo original -->
+    <a routerLink="/" class="header-logo" aria-label="Página inicial">
+      <img src="Logo.png" alt="Ateliê Casa Sensorial" />
+    </a>
 
-  <p *ngIf="erro()">
-    {{ erro() }}
-  </p>
+    <!-- Navegação desktop -->
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a routerLink="/">Inicio</a>
+      <a routerLink="/produtos">Produtos</a>
+      <a routerLink="/carrinho">Carrinho</a>
+    </nav>
 
-  <button type="submit" [disabled]="enviando()">
-    {{ enviando() ? 'Enviando...' : 'Finalizar pedido' }}
-  </button>
-</form>
+    <!-- Ícones -->
+    <div class="header-actions">
+      <button type="button" class="icon-button"
+              aria-label="Pesquisar"
+              (click)="toggleSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.8" cy="10.8" r="6.8"></circle>
+          <path d="m16 16 4.5 4.5"></path>
+        </svg>
+      </button>
 
-<div *ngIf="pedidoCriado()">
-  <h2>Pedido realizado com sucesso</h2>
+      <!--<a routerLink="/favoritos" class="icon-button"
+         aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.8 8.4c0 4.8-8.8 11-8.8 11s-8.8-6.2-8.8-11a4.8 4.8 0 0 1 8.8-2.6 4.8 4.8 0 0 1 8.8 2.6Z"></path>
+        </svg>
+      </a>-->
 
-  <p>Número do pedido: #{{ pedidoCriado() }}</p>
+      <a routerLink="/carrinho" class="icon-button cart-button"
+         aria-label="Carrinho">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="7" width="16" height="14" rx="2"></rect>
+          <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+        </svg>
+        <span class="cart-count">{{ cartCount }}</span>
+      </a>
 
-  <p>Seu pedido foi registrado como pendente.</p>
+      <button type="button" class="icon-button mobile-toggle"
+              [attr.aria-expanded]="menuOpen"
+              aria-controls="mobile-navigation"
+              aria-label="Abrir ou fechar menu"
+              (click)="toggleMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round">
+          <path *ngIf="!menuOpen" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path *ngIf="menuOpen" d="M5 5l14 14M19 5 5 19"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 
-  <button type="button" (click)="abrirWhatsApp()">Continuar pelo WhatsApp</button>
+  <div class="search-panel" *ngIf="searchOpen">
+    <form (ngSubmit)="submitSearch()">
+      <input
+        type="search"
+        name="search"
+        [(ngModel)]="searchTerm"
+        placeholder="O que você está procurando?"
+        aria-label="Buscar produtos"
+      />
+      <button type="submit">Buscar</button>
+    </form>
+  </div>
+
+  <!-- Menu mobile -->
+  <nav id="mobile-navigation"
+       class="mobile-nav"
+       *ngIf="menuOpen"
+       aria-label="Navegação mobile">
+    <a routerLink="/produtos" (click)="closeMenu()">Comprar</a>
+    <a routerLink="/sobre" (click)="closeMenu()">Sobre a empreendedora</a>
+    <a routerLink="/guias-de-aromas" (click)="closeMenu()">Guias de aromas</a>
+  </nav>
+</header>
+
+
+<main class="checkout-page">
+
+  <div class="checkout-container">
+
+    <!-- Cabeçalho da página -->
+    <div class="checkout-heading">
+
+      <a routerLink="/carrinho" class="checkout-back">
+        <span>←</span>
+        Voltar ao carrinho
+      </a>
+
+      <div class="checkout-heading-content">
+        <div>
+          <span class="checkout-eyebrow">
+            FINALIZAÇÃO DO PEDIDO
+          </span>
+
+          <h1>Quase tudo pronto<span>.</span></h1>
+
+          <p>
+            Informe seus dados e finalize sua compra.
+          </p>
+        </div>
+
+        <div class="checkout-heading-icon">
+          <i class="bi bi-bag-check"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Etapas -->
+    <div class="checkout-steps">
+
+      <div class="checkout-step completed">
+        <div class="step-circle">
+          <i class="bi bi-check-lg"></i>
+        </div>
+        <span>Carrinho</span>
+      </div>
+
+      <div class="step-line completed"></div>
+
+      <div
+        class="checkout-step"
+        [class.active]="!pedidoCriado()"
+        [class.completed]="pedidoCriado()"
+      >
+        <div class="step-circle">
+          <i
+            class="bi"
+            [ngClass]="pedidoCriado() ? 'bi-check-lg' : 'bi-person'"
+          ></i>
+        </div>
+        <span>Seus dados</span>
+      </div>
+
+      <div class="step-line"
+           [class.completed]="!!pedidoCriado()"></div>
+
+      <div class="checkout-step"
+           [class.active]="!!pedidoCriado()">
+        <div class="step-circle">
+          <i class="bi bi-whatsapp"></i>
+        </div>
+        <span>WhatsApp</span>
+      </div>
+
+    </div>
+
+    <!-- Carrinho vazio -->
+    <section
+      class="checkout-empty"
+      *ngIf="carrinhoService.itens().length === 0 && !pedidoCriado()"
+    >
+      <div class="empty-icon">
+        <i class="bi bi-bag"></i>
+      </div>
+
+      <h2>Seu carrinho está vazio.</h2>
+
+      <p>
+        Adicione produtos ao carrinho antes
+        de finalizar seu pedido.
+      </p>
+
+      <a routerLink="/produtos" class="empty-button">
+        VER CATÁLOGO
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    </section>
+
+    <!-- Formulário -->
+    <form
+      #checkoutForm="ngForm"
+      *ngIf="carrinhoService.itens().length > 0 && !pedidoCriado()"
+      (ngSubmit)="finalizarPedido()"
+      class="checkout-layout"
+    >
+
+      <!-- Coluna do formulário -->
+      <div class="checkout-form-column">
+
+        <!-- Dados pessoais -->
+        <section class="checkout-card">
+
+          <div class="card-heading">
+            <div class="card-heading-icon">
+              <i class="bi bi-person"></i>
+            </div>
+
+            <div>
+              <span>ETAPA 01</span>
+              <h2>Dados pessoais</h2>
+              <p>Informações de Contato.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+
+            <div class="form-field full-width">
+              <label for="checkout-nome">
+                Nome completo <span>*</span>
+              </label>
+
+              <input
+                id="checkout-nome"
+                type="text"
+                name="nome"
+                [(ngModel)]="nome"
+                #nomeCampo="ngModel"
+                autocomplete="name"
+                placeholder="Digite seu nome completo"
+                required
+              />
+
+              <small
+                class="field-error"
+                *ngIf="nomeCampo.invalid && (nomeCampo.touched || checkoutForm.submitted)"
+              >
+                Informe seu nome.
+              </small>
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-email">
+                E-mail
+                <span class="optional">(opcional)</span>
+              </label>
+
+              <input
+                id="checkout-email"
+                type="email"
+                name="email"
+                [(ngModel)]="email"
+                #emailCampo="ngModel"
+                autocomplete="email"
+                placeholder="seuemail@exemplo.com"
+                email
+              />
+
+              <small
+                class="field-error"
+                *ngIf="emailCampo.invalid && (emailCampo.touched || checkoutForm.submitted)"
+              >
+                Informe um e-mail válido.
+              </small>
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-telefone">
+                WhatsApp <span>*</span>
+              </label>
+
+              <input
+                id="checkout-telefone"
+                type="tel"
+                name="telefone"
+                [(ngModel)]="telefone"
+                #telefoneCampo="ngModel"
+                (input)="formatarTelefone()"
+                maxlength="15"
+                placeholder="(18) 99999-9999"
+                autocomplete="tel"
+                required
+              />
+
+              <small
+                class="field-error"
+                *ngIf="telefoneCampo.invalid && (telefoneCampo.touched || checkoutForm.submitted)"
+              >
+                Informe seu telefone.
+              </small>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- Endereço -->
+        <section class="checkout-card">
+
+          <div class="card-heading">
+            <div class="card-heading-icon">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+
+            <div>
+              <span>ETAPA 02</span>
+              <h2>Endereço de entrega</h2>
+              <p>Informe seu endereço de entrega.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+<div class="form-field">
+  <label for="checkout-cep">
+    CEP <span>*</span>
+  </label>
+
+  <div class="cep-field">
+    <input
+      id="checkout-cep"
+      type="text"
+      name="cep"
+      [(ngModel)]="cep"
+      (input)="formatarCep()"
+      (blur)="buscarCep()"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      maxlength="9"
+      pattern="[0-9]{5}-[0-9]{3}"
+      placeholder="00000-000"
+      required
+    />
+
+    <span *ngIf="buscandoCep()" class="cep-loading">
+      Localizando...
+    </span>
+  </div>
+
+  <small *ngIf="erroCep()" class="field-error">
+    {{ erroCep() }}
+  </small>
 </div>
 
-<br />
+            <div class="form-field full-width">
+              <label for="checkout-endereco">
+                Rua / Avenida <span>*</span>
+              </label>
 
-<a routerLink="/produtos"> Voltar aos produtos </a>
+              <input
+                id="checkout-endereco"
+                type="text"
+                name="endereco"
+                [(ngModel)]="endereco"
+                autocomplete="address-line1"
+                placeholder="Nome da rua ou avenida"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-numero">
+                Número <span>*</span>
+              </label>
+
+              <input
+                id="checkout-numero"
+                type="text"
+                name="numero"
+                [(ngModel)]="numero"
+                placeholder="Ex.: 125"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-complemento">
+                Complemento
+                <span class="optional">(opcional)</span>
+              </label>
+
+              <input
+                id="checkout-complemento"
+                type="text"
+                name="complemento"
+                [(ngModel)]="complemento"
+                autocomplete="address-line2"
+                placeholder="Apartamento, casa, referência..."
+              />
+            </div>
+
+            <div class="form-field full-width">
+              <label for="checkout-bairro">
+                Bairro <span>*</span>
+              </label>
+
+              <input
+                id="checkout-bairro"
+                type="text"
+                name="bairro"
+                [(ngModel)]="bairro"
+                placeholder="Seu bairro"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-cidade">
+                Cidade <span>*</span>
+              </label>
+
+              <input
+                id="checkout-cidade"
+                type="text"
+                name="cidade"
+                [(ngModel)]="cidade"
+                autocomplete="address-level2"
+                placeholder="Sua cidade"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="checkout-estado">
+                Estado (UF) <span>*</span>
+              </label>
+
+              <input
+                id="checkout-estado"
+                type="text"
+                name="estado"
+                [(ngModel)]="estado"
+                autocomplete="address-level1"
+                placeholder="SP"
+                maxlength="2"
+                required
+              />
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- Observações -->
+        <section class="checkout-card">
+
+          <div class="card-heading">
+            <div class="card-heading-icon">
+              <i class="bi bi-chat-left-text"></i>
+            </div>
+
+            <div>
+              <span>ETAPA 03</span>
+              <h2>Observações</h2>
+              <p>Tem alguma informação especial para nós?</p>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="checkout-observacao">
+              Observações do pedido
+              <span class="optional">(opcional)</span>
+            </label>
+
+            <textarea
+              id="checkout-observacao"
+              name="observacao"
+              [(ngModel)]="observacao"
+              rows="4"
+              placeholder="Ex.: informações sobre a entrega, instruções ou algum pedido especial."
+            ></textarea>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- Resumo à direita -->
+      <aside class="checkout-summary">
+
+        <div class="summary-title">
+          <i class="bi bi-bag"></i>
+          <h2>Resumo do pedido</h2>
+        </div>
+
+        <div class="summary-body">
+
+          <p class="summary-section-label">
+            SEUS PRODUTOS
+          </p>
+
+          <div
+            class="summary-product"
+            *ngFor="let item of carrinhoService.itens()"
+          >
+
+            <div class="summary-product-image">
+
+              <img
+                *ngIf="item.produto.imagem_principal"
+                [src]="item.produto.imagem_principal"
+                [alt]="item.produto.nome"
+                loading="lazy"
+              />
+
+              <i
+                *ngIf="!item.produto.imagem_principal"
+                class="bi bi-image"
+              ></i>
+
+            </div>
+
+            <div class="summary-product-info">
+
+              <h3>{{ item.produto.nome }}</h3>
+
+              <p>
+                {{ item.quantidade }}
+                {{ item.quantidade === 1 ? 'unidade' : 'unidades' }}
+                × R$ {{ item.produto.preco | number:'1.2-2' }}
+              </p>
+
+              <strong>
+                R$ {{
+                  (+item.produto.preco * item.quantidade)
+                    | number:'1.2-2'
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+          <a routerLink="/carrinho" class="edit-cart">
+            <i class="bi bi-pencil"></i>
+            Editar carrinho
+          </a>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>
+              R$ {{ carrinhoService.valorTotal() | number:'1.2-2' }}
+            </strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Entrega</span>
+            <span class="delivery-value">A combinar</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Total dos produtos</span>
+
+            <strong>
+              R$ {{ carrinhoService.valorTotal() | number:'1.2-2' }}
+            </strong>
+          </div>
+
+          <p class="delivery-notice">
+            <i class="bi bi-info-circle"></i>
+            O valor da entrega será combinado durante
+            o atendimento.
+          </p>
+
+          <!-- Erros da API -->
+          <div
+            class="checkout-error"
+            *ngIf="erro()"
+            role="alert"
+          >
+            <i class="bi bi-exclamation-circle"></i>
+            <span>{{ erro() }}</span>
+          </div>
+
+          <button
+            type="submit"
+            class="confirm-button"
+            [disabled]="enviando() || buscandoCep()"
+          >
+
+            <span>
+              {{
+                enviando()
+                  ? 'REGISTRANDO PEDIDO...'
+                  : 'CONFIRMAR PEDIDO'
+              }}
+            </span>
+
+            <i class="bi bi-arrow-right" *ngIf="!enviando()"></i>
+          </button>
+
+          <div class="summary-security">
+            <i class="bi bi-shield-check"></i>
+
+            <p>
+              Seu pedido será registrado e você poderá
+              continuar o atendimento pelo WhatsApp.
+            </p>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </form>
+
+    <!-- Confirmação -->
+    <section
+      class="checkout-success"
+      *ngIf="pedidoCriado()"
+    >
+
+      <div class="success-icon">
+        <i class="bi bi-check-lg"></i>
+      </div>
+
+      <span class="success-eyebrow">
+        PEDIDO REGISTRADO
+      </span>
+
+      <h2>Seu pedido foi recebido!</h2>
+
+      <p class="success-description">
+        Seu pedido foi registrado com sucesso
+        e está aguardando confirmação.
+      </p>
+
+      <div class="success-order-number">
+        <span>NÚMERO DO PEDIDO</span>
+        <strong>#{{ pedidoCriado() }}</strong>
+      </div>
+
+      <div class="success-next-step">
+        <i class="bi bi-whatsapp"></i>
+        <p>
+          Continue pelo WhatsApp para combinar
+          os próximos detalhes da sua compra.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="whatsapp-button"
+        (click)="abrirWhatsApp()"
+      >
+        <i class="bi bi-whatsapp"></i>
+        CONTINUAR PELO WHATSAPP
+        <i class="bi bi-arrow-up-right"></i>
+      </button>
+
+      <a routerLink="/produtos" class="success-back">
+        Voltar ao catálogo
+      </a>
+    </section>
+  </div>
+</main>

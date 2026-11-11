@@ -1,0 +1,670 @@
+
+/* ==========================================
+   AROMA STORE — FORMULÁRIO DE CATEGORIAS
+========================================== */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.admin-category-form-page {
+  min-height: 100vh;
+  background: #f7f8f6;
+  color: #183d2b;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ==========================================
+   HEADER ADMINISTRATIVO
+========================================== */
+
+.admin-header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  background: #153c29;
+  color: #ffffff;
+}
+
+.admin-header-content {
+  width: 100%;
+  max-width: 1500px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.brand-icon {
+  font-size: 23px;
+}
+
+.brand-name {
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: -0.4px;
+  white-space: nowrap;
+}
+
+.brand-divider {
+  height: 30px;
+  width: 1px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.admin-header-title {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.back-dashboard {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 36px;
+  padding: 0 13px;
+
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-dashboard:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================
+   CONTEÚDO PRINCIPAL
+========================================== */
+
+.category-form-container {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 30px 30px 70px;
+}
+
+/* Breadcrumb */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-bottom: 28px;
+  color: #7d8980;
+  font-size: 12px;
+}
+
+.breadcrumb a {
+  color: #617568;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: #153c29;
+  text-decoration: underline;
+}
+
+.breadcrumb i {
+  font-size: 10px;
+  color: #a5afa6;
+}
+
+.breadcrumb > span {
+  color: #274b35;
+  font-weight: 600;
+}
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.page-heading {
+  margin-bottom: 25px;
+}
+
+.heading-left {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.heading-icon {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e8f0e7;
+  color: #153c29;
+  border-radius: 12px;
+  font-size: 26px;
+}
+
+.heading-text h1 {
+  margin: 0 0 5px;
+  font-family: Georgia, serif;
+  font-size: 33px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+
+.heading-text p {
+  margin: 0;
+  color: #768278;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   CARD DO FORMULÁRIO
+========================================== */
+
+.category-form-card {
+  background: #ffffff;
+  border: 1px solid #e6ebe5;
+  border-radius: 11px;
+  box-shadow: 0 4px 18px rgba(20, 45, 29, 0.035);
+  overflow: hidden;
+}
+
+.form-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 23px 28px;
+  border-bottom: 1px solid #edf0eb;
+}
+
+.form-card-heading h2 {
+  margin: 0 0 6px;
+  color: #1b422e;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.form-card-heading p {
+  margin: 0;
+  color: #819084;
+  font-size: 12px;
+}
+
+.required-note {
+  color: #9b726f;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   CAMPOS
+========================================== */
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 27px;
+  padding: 28px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.form-field label {
+  color: #344c3b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field label > span:not(.optional) {
+  color: #ad4852;
+}
+
+.optional {
+  color: #89958a;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 11px 13px;
+
+  background: #ffffff;
+  border: 1px solid #dbe2d9;
+  border-radius: 7px;
+
+  color: #243d2d;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field input {
+  height: 43px;
+}
+
+.form-field textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #a4ada4;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #568269;
+  box-shadow: 0 0 0 3px rgba(35, 80, 48, 0.07);
+}
+
+.form-field input.ng-invalid.ng-touched {
+  border-color: #b85b64;
+}
+
+.field-help {
+  color: #8b968d;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.field-error {
+  color: #ab4650;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   STATUS DA CATEGORIA
+========================================== */
+
+.category-status-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 20px;
+  background: #f8faf7;
+  border: 1px solid #e6ece5;
+  border-radius: 8px;
+}
+
+.status-information h3 {
+  margin: 0 0 6px;
+  color: #294734;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-information p {
+  margin: 0;
+  max-width: 420px;
+  color: #829084;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* Interruptor */
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.status-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 23px;
+
+  background: #c8d1c8;
+  border-radius: 20px;
+  transition: background 0.2s ease;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+
+  width: 17px;
+  height: 17px;
+
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  transition: transform 0.2s ease;
+}
+
+.status-toggle input:checked + .toggle-switch {
+  background: #267647;
+}
+
+.status-toggle input:checked + .toggle-switch::after {
+  transform: translateX(19px);
+}
+
+.status-toggle input:focus-visible + .toggle-switch {
+  outline: 3px solid #91b9a0;
+  outline-offset: 3px;
+}
+
+.toggle-label {
+  min-width: 42px;
+  color: #355340;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ==========================================
+   RODAPÉ / BOTÕES
+========================================== */
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 11px;
+
+  padding: 18px 28px;
+  background: #fcfdfb;
+  border-top: 1px solid #edf0eb;
+}
+
+.cancel-button,
+.save-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 39px;
+  padding: 0 17px;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cancel-button {
+  background: #ffffff;
+  border: 1px solid #d5dfd5;
+  color: #526957;
+}
+
+.cancel-button:hover {
+  background: #f2f6f1;
+}
+
+.save-button {
+  background: #153c29;
+  border: 1px solid #153c29;
+  color: #ffffff;
+}
+
+.save-button i {
+  font-size: 14px;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #245339;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   CARREGAMENTO / ERRO
+========================================== */
+
+.form-loading {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e6ebe5;
+  border-radius: 11px;
+
+  color: #7e8a80;
+  font-size: 12px;
+}
+
+.loading-spinner {
+  width: 29px;
+  height: 29px;
+
+  border: 3px solid #e3ece2;
+  border-top-color: #153c29;
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-bottom: 19px;
+  padding: 13px 15px;
+
+  border: 1px solid #f0d1d5;
+  border-radius: 7px;
+  background: #fff3f4;
+
+  color: #a04150;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   ACESSIBILIDADE
+========================================== */
+
+.back-dashboard:focus-visible,
+.cancel-button:focus-visible,
+.save-button:focus-visible {
+  outline: 3px solid #90b69a;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 950px) {
+  .admin-header-content {
+    padding: 0 24px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+  }
+
+  .admin-header-title {
+    font-size: 18px;
+  }
+
+  .category-form-container {
+    padding: 28px 24px 60px;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+  .admin-header {
+    height: 65px;
+  }
+
+  .admin-header-content {
+    padding: 0 16px;
+  }
+
+  .admin-brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    font-size: 20px;
+  }
+
+  .brand-name {
+    font-size: 21px;
+  }
+
+  .brand-divider,
+  .admin-header-title {
+    display: none;
+  }
+
+  .back-dashboard {
+    padding: 0 11px;
+    font-size: 11px;
+  }
+
+  .category-form-container {
+    padding: 22px 14px 45px;
+  }
+
+  .breadcrumb {
+    margin-bottom: 23px;
+    font-size: 11px;
+  }
+
+  .heading-left {
+    gap: 13px;
+  }
+
+  .heading-icon {
+    flex: 0 0 49px;
+    width: 49px;
+    height: 49px;
+    font-size: 22px;
+  }
+
+  .heading-text h1 {
+    font-size: 27px;
+  }
+
+  .heading-text p {
+    font-size: 12px;
+  }
+
+  .form-card-heading {
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .form-fields {
+    padding: 20px;
+    gap: 23px;
+  }
+
+  .category-status-section {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-actions {
+    padding: 16px 20px;
+  }
+
+  .cancel-button,
+  .save-button {
+    flex: 1;
+    padding: 0 10px;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+  }
+
+  .toggle-switch,
+  .toggle-switch::after,
+  .cancel-button,
+  .save-button {
+    transition: none;
+  }
+}

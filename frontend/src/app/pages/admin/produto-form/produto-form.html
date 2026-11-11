@@ -1,155 +1,465 @@
-<h1>
-  {{ produtoId ? 'Editar Produto' : 'Novo Produto' }}
-</h1>
 
-<p *ngIf="carregando()">Carregando...</p>
+<main class="admin-product-form-page">
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+  <!-- Cabeçalho administrativo -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<form *ngIf="!carregando()" (ngSubmit)="salvar()">
-  <label>
-    Nome
-    <input type="text" name="nome" [(ngModel)]="nome" required />
-  </label>
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
+        <span class="brand-name">Aroma Store</span>
+        <span class="brand-divider"></span>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-  <br /><br />
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-  <label>
-    Descrição
-    <br />
-    <textarea name="descricao" [(ngModel)]="descricao"></textarea>
-  </label>
+    </div>
+  </header>
 
-  <br /><br />
+  <div class="product-form-container">
 
-  <label>
-    Preço
-    <input type="number" name="preco" [(ngModel)]="preco" min="0.01" step="0.01" required />
-  </label>
+    <!-- Navegação -->
+    <nav class="breadcrumb" aria-label="Navegação">
+      <a routerLink="/admin">Painel</a>
+      <i class="bi bi-chevron-right"></i>
 
-  <br /><br />
+      <a routerLink="/admin/produtos">Produtos</a>
+      <i class="bi bi-chevron-right"></i>
 
-  <label>
-    Estoque
-    <input type="number" name="estoque" [(ngModel)]="estoque" min="0" required />
-  </label>
+      <span>
+        {{ produtoId ? 'Editar produto' : 'Novo produto' }}
+      </span>
+    </nav>
 
-  <br /><br />
+    <!-- Título -->
+    <section class="page-heading">
+      <div class="heading-left">
 
-  <label>
-    Categoria
+        <div class="heading-icon">
+          <i
+            class="bi"
+            [ngClass]="produtoId ? 'bi-pencil-square' : 'bi-box-seam'"
+          ></i>
+        </div>
 
-    <select name="categoria" [(ngModel)]="categoria" required>
-      <option [ngValue]="0" disabled>Selecione</option>
+        <div class="heading-text">
+          <h1>
+            {{ produtoId ? 'Editar Produto' : 'Novo Produto' }}
+          </h1>
 
-      <option *ngFor="let categoriaItem of categorias()" [ngValue]="categoriaItem.id">
-        {{ categoriaItem.nome }}
-      </option>
-    </select>
-  </label>
+          <p>
+            {{ produtoId
+              ? 'Atualize as informações e imagens do produto.'
+              : 'Cadastre um novo produto no catálogo da loja.' }}
+          </p>
+        </div>
 
-  <br /><br />
+      </div>
+    </section>
 
-  <label>
-    <input type="checkbox" name="ativo" [(ngModel)]="ativo" />
+    <div class="form-error" *ngIf="erro()" role="alert">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
+    </div>
 
-    Produto ativo
-  </label>
+    <!-- Carregando -->
+    <div class="form-loading" *ngIf="carregando()">
+      <div class="loading-spinner"></div>
+      <p>Carregando informações do produto...</p>
+    </div>
 
-  <br /><br />
+    <div
+  class="form-success"
+  *ngIf="sucesso()"
+  role="status"
+>
+  <i class="bi bi-check-circle"></i>
+  <span>{{ sucesso() }}</span>
+</div>
 
-  <button type="submit" [disabled]="salvando()">
-    {{ salvando() ? 'Salvando...' : 'Salvar' }}
-  </button>
-</form>
+    <!-- Formulário principal -->
+    <form
+      *ngIf="!carregando()"
+      #produtoForm="ngForm"
+      class="product-form-card"
+      (ngSubmit)="salvar()"
+    >
 
-<br />
+      <div class="card-heading">
+        <div>
+          <h2>Informações do produto</h2>
+          <p>Defina os dados exibidos no catálogo.</p>
+        </div>
+        <span class="required-note">* Campos obrigatórios</span>
+      </div>
 
-<hr />
+      <div class="form-content">
 
-<section *ngIf="produtoId">
-  <h2>Imagens do Produto</h2>
+        <!-- Nome -->
+        <div class="form-field">
+          <label for="produto-nome">
+            Nome do produto <span class="required">*</span>
+          </label>
 
-  <h3>Adicionar nova imagem</h3>
+          <input
+            id="produto-nome"
+            type="text"
+            name="nome"
+            [(ngModel)]="nome"
+            #nomeCampo="ngModel"
+            placeholder="Ex.: Vela Aromática de Lavanda"
+            required
+          />
 
-  <label>
-    Arquivo
+          <small
+            class="field-error"
+            *ngIf="nomeCampo.invalid &&
+              (nomeCampo.touched || produtoForm.submitted)"
+          >
+            Informe o nome do produto.
+          </small>
+        </div>
 
-    <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="selecionarArquivo($event)" />
-  </label>
+        <!-- Descrição -->
+        <div class="form-field">
+          <label for="produto-descricao">
+            Descrição
+            <span class="optional">(opcional)</span>
+          </label>
 
-  <br /><br />
+          <textarea
+            id="produto-descricao"
+            name="descricao"
+            [(ngModel)]="descricao"
+            rows="5"
+            placeholder="Descreva as características, aromas e informações do produto..."
+          ></textarea>
+        </div>
 
-  <label>
-    Alt text
+        <!-- Preço, estoque e categoria -->
+        <div class="form-grid">
 
-    <input type="text" [(ngModel)]="imagemAltText" />
-  </label>
+          <div class="form-field">
+            <label for="produto-preco">
+              Preço (R$) <span class="required">*</span>
+            </label>
 
-  <br /><br />
+            <div class="input-prefix">
+              <span>R$</span>
+              <input
+                id="produto-preco"
+                type="number"
+                name="preco"
+                [(ngModel)]="preco"
+                min="0.01"
+                step="0.01"
+                placeholder="0,00"
+                required
+              />
+            </div>
+          </div>
 
-  <label>
-    Ordem
+          <div class="form-field">
+            <label for="produto-estoque">
+              Estoque <span class="required">*</span>
+            </label>
 
-    <input type="number" [(ngModel)]="imagemOrdem" min="0" />
-  </label>
+            <input
+              id="produto-estoque"
+              type="number"
+              name="estoque"
+              [(ngModel)]="estoque"
+              min="0"
+              step="1"
+              placeholder="Quantidade disponível"
+              required
+            />
+          </div>
 
-  <br /><br />
+          <div class="form-field">
+            <label for="produto-categoria">
+              Categoria <span class="required">*</span>
+            </label>
 
-  <label>
-    <input type="checkbox" [(ngModel)]="imagemPrincipal" />
+            <select
+              id="produto-categoria"
+              name="categoria"
+              [(ngModel)]="categoria"
+              #categoriaCampo="ngModel"
+              required
+            >
+              <option [ngValue]="0" disabled>
+                Selecione uma categoria
+              </option>
 
-    Imagem principal
-  </label>
+              <option
+                *ngFor="let categoriaItem of categorias()"
+                [ngValue]="categoriaItem.id"
+              >
+                {{ categoriaItem.nome }}
+              </option>
+            </select>
+          </div>
 
-  <br /><br />
+        </div>
 
-  <button type="button" (click)="enviarImagem()" [disabled]="enviandoImagem()">
-    {{ enviandoImagem() ? 'Enviando...' : 'Enviar imagem' }}
-  </button>
+        <!-- Status -->
+        <div class="product-status-section">
 
-  <hr />
+          <div class="status-information">
+            <h3>Disponibilidade no catálogo</h3>
 
-  <h3>Imagens cadastradas</h3>
+            <p>
+              Controle se este produto estará ativo
+              ou inativo na loja.
+            </p>
+          </div>
 
-  <p *ngIf="imagens().length === 0">Nenhuma imagem cadastrada.</p>
+          <label class="status-toggle">
+            <input
+              type="checkbox"
+              name="ativo"
+              [(ngModel)]="ativo"
+            />
 
-  <div *ngFor="let imagem of imagens()">
-    <img
-      [src]="imagem.thumbnail_url || imagem.imagem_url"
-      [alt]="imagem.alt_text || nome"
-      width="150"
-      loading="lazy"
-    />
+            <span class="toggle-switch"></span>
+            <span class="toggle-label">
+              {{ ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </label>
 
-    <p>
-      Principal:
-      {{ imagem.principal ? 'Sim' : 'Não' }}
-    </p>
+        </div>
 
-    <label>
-      Ordem
+      </div>
 
-      <input
-        type="number"
-        [ngModel]="imagem.ordem"
-        (ngModelChange)="alterarOrdem(imagem, $event)"
-        min="0"
-      />
-    </label>
+      <!-- Ações -->
+      <div class="form-actions">
+        <a
+          routerLink="/admin/produtos"
+          class="cancel-button"
+        >
+          Cancelar
+        </a>
 
-    <br /><br />
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="salvando() || produtoForm.invalid || categoria === 0"
+        >
+          <i
+            class="bi"
+            [ngClass]="salvando() ? 'bi-arrow-repeat' : 'bi-check-lg'"
+          ></i>
 
-    <button *ngIf="!imagem.principal" type="button" (click)="tornarPrincipal(imagem)">
-      Tornar principal
-    </button>
+          {{ salvando()
+            ? 'Salvando...'
+            : produtoId
+              ? 'Salvar alterações'
+              : 'Cadastrar produto' }}
+        </button>
+      </div>
 
-    <button type="button" (click)="excluirImagem(imagem)">Excluir</button>
+    </form>
 
-    <hr />
+    <!-- Galeria: somente após cadastrar o produto -->
+    <section class="images-panel" *ngIf="produtoId">
+
+      <div class="card-heading">
+        <div>
+          <h2>Imagens do produto</h2>
+          <p>Adicione e organize as fotografias do catálogo.</p>
+        </div>
+
+        <span class="images-counter">
+          {{ imagens().length }}
+          {{ imagens().length === 1 ? 'imagem' : 'imagens' }}
+        </span>
+      </div>
+
+      <!-- Upload -->
+      <div class="image-upload-section">
+
+        <h3>
+          <i class="bi bi-cloud-arrow-up"></i>
+          Adicionar nova imagem
+        </h3>
+
+        <div class="upload-fields">
+
+          <div class="form-field full-width">
+            <label for="imagem-arquivo">
+              Selecionar arquivo
+            </label>
+
+            <input
+              id="imagem-arquivo"
+              class="file-input"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp"
+              (change)="selecionarArquivo($event)"
+            />
+
+            <small class="field-help">
+              Formatos aceitos: JPG, PNG e WebP.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="imagem-alt">
+              Texto alternativo
+            </label>
+
+            <input
+              id="imagem-alt"
+              type="text"
+              [(ngModel)]="imagemAltText"
+              placeholder="Descreva a fotografia"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="imagem-ordem">
+              Ordem de exibição
+            </label>
+
+            <input
+              id="imagem-ordem"
+              type="number"
+              [(ngModel)]="imagemOrdem"
+              min="0"
+              step="1"
+            />
+          </div>
+
+        </div>
+
+        <div class="upload-bottom">
+
+          <label class="main-image-checkbox">
+            <input
+              type="checkbox"
+              [(ngModel)]="imagemPrincipal"
+            />
+            <span>Definir como imagem principal</span>
+          </label>
+
+          <button
+            type="button"
+            class="upload-button"
+            (click)="enviarImagem()"
+            [disabled]="enviandoImagem()"
+          >
+            <i class="bi bi-cloud-arrow-up"></i>
+
+            {{ enviandoImagem()
+              ? 'Enviando...'
+              : 'Enviar imagem' }}
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Imagens cadastradas -->
+      <div class="registered-images">
+
+        <div class="registered-heading">
+          <h3>Imagens cadastradas</h3>
+        </div>
+
+        <div class="images-empty" *ngIf="imagens().length === 0">
+          <i class="bi bi-images"></i>
+          <p>Nenhuma imagem cadastrada.</p>
+        </div>
+
+        <div class="images-grid" *ngIf="imagens().length > 0">
+
+          <article
+            class="image-card"
+            *ngFor="let imagem of imagens()"
+          >
+
+            <div class="image-preview">
+              <img
+                [src]="imagem.thumbnail_url || imagem.imagem_url"
+                [alt]="imagem.alt_text || nome"
+                loading="lazy"
+              />
+
+              <span
+                class="principal-badge"
+                *ngIf="imagem.principal"
+              >
+                <i class="bi bi-check-circle"></i>
+                Principal
+              </span>
+            </div>
+
+            <div class="image-details">
+
+              <p class="image-name">
+                {{ imagem.alt_text || 'Imagem do produto' }}
+              </p>
+
+              <div class="image-order-field">
+                <label>
+                  Ordem
+                </label>
+
+                <input
+                  type="number"
+                  [ngModel]="imagem.ordem"
+                  (ngModelChange)="alterarOrdem(imagem, $event)"
+                  min="0"
+                  step="1"
+                />
+              </div>
+
+              <div class="image-actions">
+
+                <button
+                  *ngIf="!imagem.principal"
+                  type="button"
+                  class="set-primary-button"
+                  (click)="tornarPrincipal(imagem)"
+                  [disabled]="imagemAtualizando() !== null"
+                >
+                  <i class="bi bi-star"></i>
+                  Tornar principal
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-image-button"
+                  (click)="excluirImagem(imagem)"
+                  [disabled]="imagemAtualizando() !== null"
+                >
+                  <i class="bi bi-trash"></i>
+                  Excluir
+                </button>
+
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <a routerLink="/admin/produtos" class="back-products">
+      <i class="bi bi-arrow-left"></i>
+      Voltar para produtos
+    </a>
+
   </div>
-</section>
 
-<a routerLink="/admin/produtos"> Voltar </a>
+</main>

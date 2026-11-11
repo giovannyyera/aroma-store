@@ -1,5 +1,10 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+import { forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { RelatorioService } from '../../core/services/relatorio.service';
 
@@ -13,7 +18,8 @@ import {
 @Component({
   selector: 'app-relatorios',
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink
   ],
   templateUrl: './relatorios.html',
   styleUrl: './relatorios.css'
@@ -21,12 +27,9 @@ import {
 export class Relatorios implements OnInit {
 
   resumo = signal<ResumoGeral | null>(null);
-
   produtos = signal<ProdutoVendido[]>([]);
   categorias = signal<CategoriaVendas[]>([]);
-
   pivot = signal<VendasMensaisPivot | null>(null);
-
   carregando = signal(true);
   erro = signal('');
 
@@ -38,41 +41,72 @@ export class Relatorios implements OnInit {
     this.carregarRelatorios();
   }
 
+
   carregarRelatorios(): void {
+
+    if (this.carregando() && this.resumo() !== null) {
+      return;
+    }
+
     this.carregando.set(true);
     this.erro.set('');
 
-    this.relatorioService.buscarResumo().subscribe({
+    forkJoin({
+      resumo: this.relatorioService.buscarResumo(),
+
+      produtos: this.relatorioService.buscarProdutosVendidos(),
+
+      categorias: this.relatorioService.buscarVendasPorCategoria(),
+
+      pivot: this.relatorioService.buscarPivot()
+    })
+    .pipe(
+      finalize(() => {
+        this.carregando.set(false);
+      })
+    )
+    .subscribe({
+
       next: (dados) => {
-        this.resumo.set(dados);
+
+        this.resumo.set(dados.resumo);
+
+        this.produtos.set(dados.produtos);
+
+        this.categorias.set(dados.categorias);
+
+        this.pivot.set(dados.pivot);
+
       },
 
-      error: () => {
-        this.erro.set(
-          'Não foi possível acessar os relatórios. Verifique se você está autenticado como administrador.'
+      error: (erro) => {
+
+        console.error(
+          'Erro ao carregar relatórios:',
+          erro
         );
 
-        this.carregando.set(false);
-      }
-    });
+        if (erro.status === 0) {
+          this.erro.set(
+            'Não foi possível conectar ao servidor. Verifique sua conexão.'
+          );
 
-    this.relatorioService.buscarProdutosVendidos().subscribe({
-      next: (dados) => {
-        this.produtos.set(dados);
-      }
-    });
+          return;
+        }
 
-    this.relatorioService.buscarVendasPorCategoria().subscribe({
-      next: (dados) => {
-        this.categorias.set(dados);
-      }
-    });
+        if (erro.status === 401 || erro.status === 403) {
+          this.erro.set(
+            'Você não possui autorização para acessar os relatórios.'
+          );
 
-    this.relatorioService.buscarPivot().subscribe({
-      next: (dados) => {
-        this.pivot.set(dados);
-        this.carregando.set(false);
+          return;
+        }
+
+        this.erro.set(
+          'Não foi possível carregar os relatórios. Tente novamente.'
+        );
       }
+
     });
   }
 }

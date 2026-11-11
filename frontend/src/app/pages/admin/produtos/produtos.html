@@ -1,87 +1,355 @@
-<h1>Produtos</h1>
 
-<p>
-  <a routerLink="/admin/produtos/novo"> Cadastrar novo produto </a>
-</p>
+<main class="admin-products">
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+  <!-- Cabeçalho administrativo -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<label>
-  Buscar:
-  <input type="text" [(ngModel)]="busca" />
-</label>
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
+        <span class="brand-name">Aroma Store</span>
+        <span class="brand-divider"></span>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-<button type="button" (click)="carregar()">Buscar</button>
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-<p>
-  <button (click)="carregar()">Todos</button>
+    </div>
+  </header>
 
-  <button (click)="carregar('true')">Ativos</button>
+  <div class="products-container">
 
-  <button (click)="carregar('false')">Inativos</button>
-</p>
+    <!-- Título da página -->
+    <section class="products-heading">
 
-<p *ngIf="carregando()">Carregando...</p>
+      <div class="heading-left">
+        <div class="heading-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>Imagem</th>
-      <th>ID</th>
-      <th>Produto</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Estoque</th>
-      <th>Status</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
+        <div class="heading-text">
+          <h1>Produtos</h1>
+          <p>Gerencie os produtos e o estoque da loja.</p>
+        </div>
+      </div>
 
-  <tbody>
-    <tr *ngFor="let produto of produtos()">
-      <td>
-        <img
-          *ngIf="produto.imagem_principal"
-          [src]="produto.imagem_principal"
-          [alt]="produto.nome"
-          loading="lazy"
-          width="80"
-        />
-      </td>
+      <a
+        routerLink="/admin/produtos/novo"
+        class="new-product-button"
+      >
+        <i class="bi bi-plus-lg"></i>
+        <span>Cadastrar novo produto</span>
+      </a>
 
-      <td>
-        {{ produto.id }}
-      </td>
+    </section>
 
-      <td>
-        {{ produto.nome }}
-      </td>
+    <!-- Mensagens de erro -->
+    <div class="products-error" *ngIf="erro()" role="alert">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
 
-      <td>
-        {{ produto.categoria_nome }}
-      </td>
+      <button
+        type="button"
+        (click)="carregar()"
+        aria-label="Tentar novamente"
+      >
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
 
-      <td>R$ {{ produto.preco }}</td>
+    <!-- Filtros -->
+    <section class="products-filter-panel">
 
-      <td>
-        {{ produto.estoque }}
-      </td>
+      <div class="filter-search">
 
-      <td>
-        {{ produto.ativo ? 'Ativo' : 'Inativo' }}
-      </td>
+        <label for="product-search">
+          Buscar produto
+        </label>
 
-      <a [routerLink]="['/admin/produtos', produto.id, 'editar']"> Editar </a>
+        <div class="search-wrapper">
+          <i class="bi bi-search"></i>
 
-      &nbsp;
+          <input
+            id="product-search"
+            type="search"
+            name="busca"
+            [(ngModel)]="busca"
+            (keyup.enter)="carregar()"
+            placeholder="Pesquise pelo nome do produto..."
+          />
 
-      <td>
-        <button *ngIf="produto.ativo" (click)="desativar(produto.id)">Retirar do catálogo</button>
+          <button
+            type="button"
+            class="search-button"
+            (click)="carregar()"
+          >
+            Buscar
+          </button>
+        </div>
 
-        <button *ngIf="!produto.ativo" (click)="ativar(produto.id)">Reativar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      </div>
+
+      <div class="filter-status">
+
+        <span class="filter-label">
+          Status
+        </span>
+
+
+<div class="status-filter-buttons">
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroAtivo() === ''"
+    [attr.aria-pressed]="filtroAtivo() === ''"
+    (click)="carregar('')"
+  >
+    Todos
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroAtivo() === 'true'"
+    [attr.aria-pressed]="filtroAtivo() === 'true'"
+    (click)="carregar('true')"
+  >
+    <span class="filter-dot active-dot"></span>
+    Ativos
+  </button>
+
+  <button
+    type="button"
+    class="filter-button"
+    [class.active]="filtroAtivo() === 'false'"
+    [attr.aria-pressed]="filtroAtivo() === 'false'"
+    (click)="carregar('false')"
+  >
+    <span class="filter-dot inactive-dot"></span>
+    Inativos
+  </button>
+
+</div>
+  
+
+      </div>
+
+    </section>
+
+    <section class="products-panel">
+
+      <div class="panel-top">
+        <div>
+          <h2>Produtos cadastrados</h2>
+          <p>Visualize e gerencie os itens do catálogo.</p>
+        </div>
+
+        <span class="products-total" *ngIf="!carregando()">
+          {{ produtos().length }}
+          {{ produtos().length === 1 ? 'produto' : 'produtos' }}
+        </span>
+      </div>
+
+      <!-- Carregamento -->
+      <div class="products-loading" *ngIf="carregando()">
+        <div class="loading-spinner"></div>
+        <p>Carregando produtos...</p>
+      </div>
+
+      <!-- Tabela -->
+      <div
+        class="table-wrapper"
+        *ngIf="!carregando() && !erro() && produtos().length > 0"
+      >
+
+        <table class="products-table">
+
+          <thead>
+            <tr>
+              <th scope="col">Imagem</th>
+              <th scope="col">ID</th>
+              <th scope="col">Produto</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Preço</th>
+              <th scope="col">Estoque</th>
+              <th scope="col">Status</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let produto of produtos()">
+
+              <!-- Imagem -->
+              <td>
+                <div class="product-thumbnail">
+
+                  <img
+                    *ngIf="produto.imagem_principal"
+                    [src]="produto.imagem_principal"
+                    [alt]="produto.nome"
+                    loading="lazy"
+                  />
+
+                  <i
+                    *ngIf="!produto.imagem_principal"
+                    class="bi bi-image"
+                  ></i>
+
+                </div>
+              </td>
+
+              <!-- ID -->
+              <td class="product-id">
+                #{{ produto.id }}
+              </td>
+
+              <!-- Nome -->
+              <td class="product-name">
+                {{ produto.nome }}
+              </td>
+
+              <!-- Categoria -->
+              <td class="product-category">
+                {{ produto.categoria_nome || 'Sem categoria' }}
+              </td>
+
+              <!-- Preço -->
+              <td class="product-price">
+                R$ {{ produto.preco | number:'1.2-2' }}
+              </td>
+
+              <!-- Estoque -->
+              <td>
+                <span
+                  class="stock-badge"
+                  [class.stock-empty]="produto.estoque <= 0"
+                  [class.stock-low]="produto.estoque > 0 && produto.estoque <= 5"
+                  [class.stock-available]="produto.estoque > 5"
+                >
+                  <i
+                    class="bi"
+                    [ngClass]="produto.estoque <= 0
+                      ? 'bi-exclamation-circle'
+                      : 'bi-box'"
+                  ></i>
+
+                  {{ produto.estoque }}
+                  {{ produto.estoque === 1 ? 'un.' : 'un.' }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-active]="produto.ativo"
+                  [class.status-inactive]="!produto.ativo"
+                >
+                  <span class="status-dot"></span>
+                  {{ produto.ativo ? 'Ativo' : 'Inativo' }}
+                </span>
+              </td>
+
+              <!-- Ações -->
+              <td>
+                <div class="product-actions">
+
+                  <a
+                    class="action-button edit-button"
+                    [routerLink]="[
+                      '/admin/produtos',
+                      produto.id,
+                      'editar'
+                    ]"
+                  >
+                    <i class="bi bi-pencil"></i>
+                    Editar
+                  </a>
+
+                  <button
+  *ngIf="produto.ativo"
+  type="button"
+  class="action-button deactivate-button"
+  (click)="desativar(produto.id)"
+  [disabled]="produtoAtualizando() !== null"
+>
+  <i class="bi bi-power"></i>
+
+  {{
+    produtoAtualizando() === produto.id
+      ? 'Aguarde...'
+      : 'Desativar'
+  }}
+</button>
+
+<button
+  *ngIf="!produto.ativo"
+  type="button"
+  class="action-button activate-button"
+  (click)="ativar(produto.id)"
+  [disabled]="produtoAtualizando() !== null"
+>
+  <i class="bi bi-arrow-counterclockwise"></i>
+
+  {{
+    produtoAtualizando() === produto.id
+      ? 'Aguarde...'
+      : 'Reativar'
+  }}
+</button>
+
+                </div>
+              </td>
+
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sem resultados -->
+      <div
+        class="products-empty"
+        *ngIf="!carregando() && !erro() && produtos().length === 0"
+      >
+        <div class="empty-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+
+        <h2>Nenhum produto encontrado.</h2>
+
+        <p>
+          Não encontramos produtos para os filtros selecionados.
+        </p>
+
+        <button
+          type="button"
+          class="empty-reset-button"
+          (click)="busca = ''; carregar()"
+        >
+          Limpar busca
+        </button>
+      </div>
+
+      <!-- Rodapé -->
+      <div
+        class="products-table-footer"
+        *ngIf="!carregando() && !erro()"
+      >
+        Exibindo {{ produtos().length }}
+        {{ produtos().length === 1 ? 'produto' : 'produtos' }}
+      </div>
+
+    </section>
+
+  </div>
+
+</main>

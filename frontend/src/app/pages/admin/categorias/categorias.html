@@ -1,62 +1,218 @@
-<h1>Categorias</h1>
 
-<p>
-  <a routerLink="/admin/categorias/nova"> Cadastrar nova categoria </a>
-</p>
+<main class="admin-categories">
 
-<p *ngIf="erro()">
-  {{ erro() }}
-</p>
+  <!-- Header administrativo -->
+  <header class="admin-header">
+    <div class="admin-header-content">
 
-<p *ngIf="carregando()">Carregando...</p>
+      <a routerLink="/admin" class="admin-brand">
+        <i class="bi bi-flower1 brand-icon"></i>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>Produtos</th>
-      <th>Status</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
+        <span class="brand-name">Aroma Store</span>
 
-  <tbody>
-    <tr *ngFor="let categoria of categorias()">
-      <td>
-        {{ categoria.id }}
-      </td>
+        <span class="brand-divider"></span>
 
-      <td>
-        {{ categoria.nome }}
-      </td>
+        <span class="admin-header-title">
+          Painel Administrativo
+        </span>
+      </a>
 
-      <td>
-        {{ categoria.descricao }}
-      </td>
+      <a routerLink="/admin" class="back-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Painel</span>
+      </a>
 
-      <td>
-        {{ categoria.quantidade_produtos }}
-      </td>
+    </div>
+  </header>
 
-      <td>
-        {{ categoria.ativo ? 'Ativa' : 'Inativa' }}
-      </td>
+  <div class="categories-container">
 
-      <td>
-        <a [routerLink]="['/admin/categorias', categoria.id, 'editar']"> Editar </a>
+    <!-- Título e ação principal -->
+    <section class="categories-heading">
 
-        &nbsp;
+      <div class="heading-left">
 
-        <button *ngIf="categoria.ativo" type="button" (click)="desativar(categoria.id)">
-          Desativar
-        </button>
+        <div class="heading-icon">
+          <i class="bi bi-layers"></i>
+        </div>
 
-        <button *ngIf="!categoria.ativo" type="button" (click)="ativar(categoria.id)">
-          Ativar
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <div class="heading-text">
+          <h1>Categorias</h1>
+          <p>
+            Gerencie as categorias dos produtos da loja.
+          </p>
+        </div>
+
+      </div>
+
+      <a
+        routerLink="/admin/categorias/nova"
+        class="new-category-button"
+      >
+        <i class="bi bi-plus-lg"></i>
+        <span>Cadastrar nova categoria</span>
+      </a>
+
+    </section>
+
+    <!-- Mensagem de erro -->
+    <div
+      class="categories-error"
+      *ngIf="erro()"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ erro() }}</span>
+    </div>
+
+    <!-- Tabela -->
+    <section class="categories-panel">
+
+      <div class="categories-loading" *ngIf="carregando()">
+        <div class="loading-spinner"></div>
+        <p>Carregando categorias...</p>
+      </div>
+
+      <div
+        class="table-wrapper"
+        *ngIf="!carregando() && !erro() && categorias().length > 0"
+      >
+
+        <table class="categories-table">
+
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Produtos</th>
+              <th scope="col">Status</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let categoria of categorias()">
+
+              <td class="category-id">
+                {{ categoria.id }}
+              </td>
+
+              <td class="category-name">
+                {{ categoria.nome }}
+              </td>
+
+              <td class="category-description">
+                {{ categoria.descricao || 'Sem descrição cadastrada' }}
+              </td>
+
+              <td class="category-count">
+                {{ categoria.quantidade_produtos }}
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-active]="categoria.ativo"
+                  [class.status-inactive]="!categoria.ativo"
+                >
+                  <span class="status-dot"></span>
+
+                  {{ categoria.ativo ? 'Ativa' : 'Inativa' }}
+                </span>
+              </td>
+
+              <td>
+                <div class="category-actions">
+
+                  <!-- Editar -->
+                  <a
+                    class="action-button edit-button"
+                    [routerLink]="[
+                      '/admin/categorias',
+                      categoria.id,
+                      'editar'
+                    ]"
+                  >
+                    <i class="bi bi-pencil"></i>
+                    <span>Editar</span>
+                  </a>
+
+                  <!-- Desativar -->
+                  <button
+                    *ngIf="categoria.ativo"
+                    type="button"
+                    class="action-button deactivate-button"
+                    (click)="desativar(categoria.id)"
+                  >
+                    <i class="bi bi-power"></i>
+                    <span>Desativar</span>
+                  </button>
+
+                  <!-- Ativar -->
+                  <button
+                    *ngIf="!categoria.ativo"
+                    type="button"
+                    class="action-button activate-button"
+                    (click)="ativar(categoria.id)"
+                  >
+                    <i class="bi bi-power"></i>
+                    <span>Ativar</span>
+                  </button>
+
+                </div>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- Nenhuma categoria -->
+      <div
+        class="categories-empty"
+        *ngIf="
+          !carregando() &&
+          !erro() &&
+          categorias().length === 0
+        "
+      >
+        <div class="empty-icon">
+          <i class="bi bi-tags"></i>
+        </div>
+
+        <h2>Nenhuma categoria cadastrada.</h2>
+
+        <p>
+          Cadastre sua primeira categoria para organizar
+          os produtos da loja.
+        </p>
+
+        <a
+          routerLink="/admin/categorias/nova"
+          class="empty-create-button"
+        >
+          <i class="bi bi-plus-lg"></i>
+          Cadastrar categoria
+        </a>
+      </div>
+
+      <!-- Rodapé da tabela -->
+      <div class="categories-table-footer" *ngIf="!carregando()">
+        <span>
+          Exibindo {{ categorias().length }}
+          {{ categorias().length === 1
+              ? 'categoria'
+              : 'categorias' }}
+        </span>
+      </div>
+
+    </section>
+
+  </div>
+
+</main>

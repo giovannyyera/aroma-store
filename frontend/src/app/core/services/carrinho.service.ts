@@ -1,3 +1,4 @@
+
 import { Injectable, computed, signal } from '@angular/core';
 
 import { Produto } from '../../models/catalogo.model';
@@ -8,18 +9,22 @@ import { ItemCarrinho } from '../../models/carrinho.model';
 })
 export class CarrinhoService {
 
-  private readonly itensSignal = signal<ItemCarrinho[]>([]);
+  private readonly storageKey = 'aroma_store_carrinho';
 
-  itens = this.itensSignal.asReadonly();
+  private readonly itensSignal = signal<ItemCarrinho[]>(
+    this.carregarCarrinho()
+  );
 
-  quantidadeTotal = computed(() =>
+  readonly itens = this.itensSignal.asReadonly();
+
+  readonly quantidadeTotal = computed(() =>
     this.itensSignal().reduce(
       (total, item) => total + item.quantidade,
       0
     )
   );
 
-  valorTotal = computed(() =>
+  readonly valorTotal = computed(() =>
     this.itensSignal().reduce(
       (total, item) =>
         total + Number(item.produto.preco) * item.quantidade,
@@ -27,7 +32,55 @@ export class CarrinhoService {
     )
   );
 
+  private carregarCarrinho(): ItemCarrinho[] {
+    if (typeof localStorage === 'undefined') {
+      return [];
+    }
+
+    try {
+      const dados = localStorage.getItem(this.storageKey);
+
+      if (!dados) {
+        return [];
+      }
+
+      const itens = JSON.parse(dados) as ItemCarrinho[];
+
+      if (!Array.isArray(itens)) {
+        return [];
+      }
+
+      return itens.filter(
+        item =>
+          item?.produto != null &&
+          Number.isFinite(Number(item.produto.id)) &&
+          Number.isInteger(item.quantidade) &&
+          item.quantidade > 0
+      );
+    } catch {
+      return [];
+    }
+  }
+
+  private atualizarCarrinho(itens: ItemCarrinho[]): void {
+    this.itensSignal.set(itens);
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(
+        this.storageKey,
+        JSON.stringify(itens)
+      );
+    }
+  }
+
   adicionarProduto(produto: Produto): void {
+    const estoque = Number(produto.estoque);
+
+    if (!Number.isFinite(estoque) || estoque <= 0) {
+      console.warn('Produto sem estoque:', produto.nome);
+      return;
+    }
+
     const itens = [...this.itensSignal()];
 
     const itemExistente = itens.find(
@@ -35,19 +88,19 @@ export class CarrinhoService {
     );
 
     if (itemExistente) {
-      if (itemExistente.quantidade < produto.estoque) {
+      if (itemExistente.quantidade < estoque) {
         itemExistente.quantidade++;
+
+        this.atualizarCarrinho([...itens]);
       }
     } else {
-      if (produto.estoque > 0) {
-        itens.push({
-          produto,
-          quantidade: 1
-        });
-      }
-    }
+      itens.push({
+        produto,
+        quantidade: 1
+      });
 
-    this.itensSignal.set([...itens]);
+      this.atualizarCarrinho(itens);
+    }
   }
 
   aumentarQuantidade(produtoId: number): void {
@@ -59,11 +112,11 @@ export class CarrinhoService {
 
     if (
       item &&
-      item.quantidade < item.produto.estoque
+      item.quantidade < Number(item.produto.estoque)
     ) {
       item.quantidade++;
 
-      this.itensSignal.set([...itens]);
+      this.atualizarCarrinho([...itens]);
     }
   }
 
@@ -85,11 +138,11 @@ export class CarrinhoService {
       itens.splice(indice, 1);
     }
 
-    this.itensSignal.set([...itens]);
+    this.atualizarCarrinho([...itens]);
   }
 
   removerProduto(produtoId: number): void {
-    this.itensSignal.set(
+    this.atualizarCarrinho(
       this.itensSignal().filter(
         item => item.produto.id !== produtoId
       )
@@ -97,6 +150,6 @@ export class CarrinhoService {
   }
 
   limpar(): void {
-    this.itensSignal.set([]);
+    this.atualizarCarrinho([]);
   }
 }
