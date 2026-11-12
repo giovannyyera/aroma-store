@@ -36,6 +36,10 @@ export class AdminProdutosService {
     return this.http.post<AdminProduto>(`${this.apiUrl}/${id}/desativar/`, {});
   }
 
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/`);
+  }
+
   buscar(id: number): Observable<AdminProduto> {
     return this.http.get<AdminProduto>(`${this.apiUrl}/${id}/`);
   }

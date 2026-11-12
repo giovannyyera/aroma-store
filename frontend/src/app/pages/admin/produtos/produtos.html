@@ -165,7 +165,7 @@
       <!-- Tabela -->
       <div
         class="table-wrapper"
-        *ngIf="!carregando() && !erro() && produtos().length > 0"
+        *ngIf="!carregando() && produtos().length > 0"
       >
 
         <table class="products-table">
@@ -305,6 +305,46 @@
       : 'Reativar'
   }}
 </button>
+
+<!-- Excluir -->
+<button
+  *ngIf="excluindoConfirmacaoId() !== produto.id"
+  type="button"
+  class="action-button delete-button"
+  (click)="pedirConfirmacaoExclusao(produto.id)"
+  [disabled]="produtoAtualizando() !== null"
+>
+  <i class="bi bi-trash"></i>
+  <span>Excluir</span>
+</button>
+
+<ng-container *ngIf="excluindoConfirmacaoId() === produto.id">
+  <button
+    type="button"
+    class="action-button delete-button delete-confirm-button"
+    (click)="excluir(produto.id)"
+    [disabled]="produtoAtualizando() !== null"
+  >
+    <i class="bi bi-trash"></i>
+    <span>
+      {{
+        produtoAtualizando() === produto.id
+          ? 'Excluindo...'
+          : 'Confirmar exclusão'
+      }}
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="action-button delete-cancel-button"
+    (click)="cancelarExclusao()"
+    [disabled]="produtoAtualizando() !== null"
+  >
+    <i class="bi bi-x-lg"></i>
+    <span>Cancelar</span>
+  </button>
+</ng-container>
 
                 </div>
               </td>

@@ -572,6 +572,34 @@
   background: #edf7ee;
 }
 
+.delete-button {
+  color: #9f2a35;
+  border-color: #d98891;
+}
+
+.delete-button:hover {
+  background: #fdecee;
+}
+
+.delete-confirm-button {
+  color: #ffffff;
+  background: #af444f;
+  border-color: #af444f;
+}
+
+.delete-confirm-button:hover {
+  background: #963742;
+}
+
+.delete-cancel-button {
+  color: #5d6a61;
+  border-color: #c9d2cb;
+}
+
+.delete-cancel-button:hover {
+  background: #f3f5f3;
+}
+
 /* ESTADOS */
 
 .products-loading,

@@ -1,6 +1,7 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -32,6 +33,8 @@ export class ProdutosAdmin implements OnInit {
   filtroAtivo = signal<FiltroStatus>('');
 
   produtoAtualizando = signal<number | null>(null);
+
+  excluindoConfirmacaoId = signal<number | null>(null);
 
   constructor(
     private produtosService: AdminProdutosService
@@ -127,6 +130,47 @@ export class ProdutosAdmin implements OnInit {
         error: () => {
           this.erro.set(
             'Não foi possível desativar o produto.'
+          );
+        }
+      });
+  }
+
+  pedirConfirmacaoExclusao(id: number): void {
+    if (this.produtoAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.excluindoConfirmacaoId.set(id);
+  }
+
+  cancelarExclusao(): void {
+    this.excluindoConfirmacaoId.set(null);
+  }
+
+  excluir(id: number): void {
+    if (this.produtoAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.produtoAtualizando.set(id);
+
+    this.produtosService.excluir(id)
+      .pipe(
+        finalize(() => {
+          this.produtoAtualizando.set(null);
+          this.excluindoConfirmacaoId.set(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.carregar();
+        },
+
+        error: (resposta: HttpErrorResponse) => {
+          this.erro.set(
+            resposta.error?.detail || 'Não foi possível excluir.'
           );
         }
       });

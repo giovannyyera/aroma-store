@@ -1,10 +1,12 @@
 from rest_framework import generics
+from rest_framework.exceptions import APIException
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import FormParser, MultiPartParser
 from .pagination import ProdutoPagination
 from django.db import transaction
+from django.db.models.deletion import ProtectedError
 from .models import Categoria, Produto, ProdutoImagem
 from .serializers import (
     CategoriaSerializer,
@@ -14,6 +16,27 @@ from .serializers import (
     ProdutoImagemAdminSerializer,
     CategoriaAdminSerializer,
 )
+
+
+class ExclusaoProtegida(APIException):
+    status_code = 409
+
+
+@transaction.atomic
+def excluir_com_arquivos(instance, imagens):
+    arquivos = [
+        (arquivo.storage, arquivo.name)
+        for imagem in imagens
+        for arquivo in (imagem.imagem, imagem.thumbnail)
+        if arquivo
+    ]
+    instance.delete()
+
+    def remover_arquivos():
+        for storage, nome in arquivos:
+            storage.delete(nome)
+
+    transaction.on_commit(remover_arquivos)
 
 
 class CategoriaListView(generics.ListAPIView):  # cria uma API de listagem usando GET
@@ -112,7 +135,7 @@ class ProdutoAdminListCreateView(generics.ListCreateAPIView):
 
 
 class ProdutoAdminDetailView(
-    generics.RetrieveUpdateAPIView
+    generics.RetrieveUpdateDestroyAPIView
 ):
     serializer_class = ProdutoAdminSerializer
     permission_classes = [IsAdminUser]
@@ -122,6 +145,15 @@ class ProdutoAdminDetailView(
         .select_related("categoria")
         .prefetch_related("imagens")
     )
+
+    def perform_destroy(self, instance):
+        try:
+            excluir_com_arquivos(instance, instance.imagens.all())
+        except ProtectedError as exc:
+            raise ExclusaoProtegida(
+                "Não é possível excluir este produto porque ele já possui "
+                "pedidos ou movimentações de estoque. Use a opção Desativar."
+            ) from exc
 
 
 class AtivarProdutoView(APIView):
@@ -221,17 +253,7 @@ class ProdutoImagemAdminDetailView(
         produto = instance.produto
         era_principal = instance.principal
 
-        if instance.imagem:
-            instance.imagem.delete(
-                save=False
-            )
-
-        if instance.thumbnail:
-            instance.thumbnail.delete(
-                save=False
-            )
-
-        instance.delete()
+        excluir_com_arquivos(instance, [instance])
 
         # Se apagou a principal, escolhe outra.
         if era_principal:
@@ -292,12 +314,21 @@ class CategoriaAdminListCreateView(
 
 
 class CategoriaAdminDetailView(
-    generics.RetrieveUpdateAPIView
+    generics.RetrieveUpdateDestroyAPIView
 ):
     serializer_class = CategoriaAdminSerializer
     permission_classes = [IsAdminUser]
 
     queryset = Categoria.objects.all()
+
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError as exc:
+            raise ExclusaoProtegida(
+                "Não é possível excluir esta categoria porque ela possui "
+                "produtos vinculados. Desative-a ou exclua/mova os produtos antes."
+            ) from exc
 
 
 class AtivarCategoriaView(APIView):

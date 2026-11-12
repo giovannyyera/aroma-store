@@ -75,7 +75,7 @@
 
       <div
         class="table-wrapper"
-        *ngIf="!carregando() && !erro() && categorias().length > 0"
+        *ngIf="!carregando() && categorias().length > 0"
       >
 
         <table class="categories-table">
@@ -160,6 +160,46 @@
                     <i class="bi bi-power"></i>
                     <span>Ativar</span>
                   </button>
+
+                  <!-- Excluir -->
+                  <button
+                    *ngIf="excluindoConfirmacaoId() !== categoria.id"
+                    type="button"
+                    class="action-button delete-button"
+                    (click)="pedirConfirmacaoExclusao(categoria.id)"
+                    [disabled]="categoriaAtualizando() !== null"
+                  >
+                    <i class="bi bi-trash"></i>
+                    <span>Excluir</span>
+                  </button>
+
+                  <ng-container *ngIf="excluindoConfirmacaoId() === categoria.id">
+                    <button
+                      type="button"
+                      class="action-button delete-button delete-confirm-button"
+                      (click)="excluir(categoria.id)"
+                      [disabled]="categoriaAtualizando() !== null"
+                    >
+                      <i class="bi bi-trash"></i>
+                      <span>
+                        {{
+                          categoriaAtualizando() === categoria.id
+                            ? 'Excluindo...'
+                            : 'Confirmar exclusão'
+                        }}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="action-button delete-cancel-button"
+                      (click)="cancelarExclusao()"
+                      [disabled]="categoriaAtualizando() !== null"
+                    >
+                      <i class="bi bi-x-lg"></i>
+                      <span>Cancelar</span>
+                    </button>
+                  </ng-container>
 
                 </div>
               </td>

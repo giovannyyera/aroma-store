@@ -1,6 +1,7 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 
 import { finalize } from 'rxjs';
@@ -25,6 +26,8 @@ export class Categorias implements OnInit {
   erro = signal('');
 
   categoriaAtualizando = signal<number | null>(null);
+
+  excluindoConfirmacaoId = signal<number | null>(null);
 
   constructor(
     private categoriasService: AdminCategoriasService
@@ -98,6 +101,47 @@ export class Categorias implements OnInit {
         error: () => {
           this.erro.set(
             'Não foi possível desativar a categoria.'
+          );
+        }
+      });
+  }
+
+  pedirConfirmacaoExclusao(id: number): void {
+    if (this.categoriaAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.excluindoConfirmacaoId.set(id);
+  }
+
+  cancelarExclusao(): void {
+    this.excluindoConfirmacaoId.set(null);
+  }
+
+  excluir(id: number): void {
+    if (this.categoriaAtualizando() !== null) {
+      return;
+    }
+
+    this.erro.set('');
+    this.categoriaAtualizando.set(id);
+
+    this.categoriasService.excluir(id)
+      .pipe(
+        finalize(() => {
+          this.categoriaAtualizando.set(null);
+          this.excluindoConfirmacaoId.set(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.carregar();
+        },
+
+        error: (resposta: HttpErrorResponse) => {
+          this.erro.set(
+            resposta.error?.detail || 'Não foi possível excluir.'
           );
         }
       });
