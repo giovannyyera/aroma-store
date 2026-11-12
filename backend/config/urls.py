@@ -43,6 +43,11 @@ urlpatterns = [
         "api/auth/",
         include("apps.autenticacao.urls")
     ),
+
+    path(
+        "api/admin/dados/",
+        include("apps.dados_demo.urls")
+    ),
 ]
 
 if settings.DEBUG:

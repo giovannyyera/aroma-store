@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "apps.estoque",
     "apps.relatorios",
     "apps.autenticacao",
+    "apps.dados_demo",
 ]
 
 MIDDLEWARE = [
