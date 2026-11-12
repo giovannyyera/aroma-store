@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import {
   ActivatedRoute,
@@ -22,7 +23,8 @@ import { Produto } from '../../models/catalogo.model';
   selector: 'app-produto-detalhe',
   imports: [
     CommonModule,
-    RouterLink
+    RouterLink,
+    FormsModule
   ],
   templateUrl: './produto-detalhe.html',
   styleUrl: './produto-detalhe.css'
